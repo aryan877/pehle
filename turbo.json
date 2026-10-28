@@ -1,0 +1,26 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "ui": "stream",
+  "tasks": {
+    "gen": {
+      "dependsOn": ["^gen"],
+      "outputs": ["openapi.json", "src/schema.d.ts"]
+    },
+    "build": {
+      "dependsOn": ["^build", "gen"],
+      "outputs": ["dist/**"]
+    },
+    "typecheck": {
+      "dependsOn": ["^gen", "gen"]
+    },
+    "lint": {},
+    "test": {
+      "dependsOn": ["^gen"]
+    },
+    "dev": {
+      "dependsOn": ["^gen"],
+      "cache": false,
+      "persistent": true
+    }
+  }
+}

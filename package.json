@@ -1,0 +1,15 @@
+{
+  "name": "pehle",
+  "private": true,
+  "packageManager": "bun@1.2.23",
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "db:up": "docker compose -f infra/compose.dev.yml up -d db",
+    "db:migrate": "sqlx migrate run --source db/migrations"
+  },
+  "devDependencies": {
+    "turbo": "^2.11.11"
+  }
+}
