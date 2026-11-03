@@ -1,0 +1,11 @@
+{
+  "name": "@pehle/api",
+  "private": true,
+  "scripts": {
+    "dev": "cargo run -p pehle-api",
+    "build": "cargo build --release -p pehle-api",
+    "test": "cargo test --workspace",
+    "lint": "cargo clippy --workspace --all-targets -- -D warnings && cargo fmt --all --check",
+    "typecheck": "cargo check --workspace --all-targets"
+  }
+}
