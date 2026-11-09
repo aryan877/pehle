@@ -1,0 +1,76 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select id, display_name, preferred_language, nexconn_user_id as \"nexconn_user_id!\", avatar_url,\n                      email::text as \"email\", phone_e164, is_demo, is_bot, created_at\n               from buyers where id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "display_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "preferred_language",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "nexconn_user_id!",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "avatar_url",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "email",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "phone_e164",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "is_demo",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 8,
+        "name": "is_bot",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 9,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      true,
+      null,
+      true,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "40c17965aac5b1bf35bdf7d107b7adb531f376279b9660ff1146c6e08119f8af"
+}

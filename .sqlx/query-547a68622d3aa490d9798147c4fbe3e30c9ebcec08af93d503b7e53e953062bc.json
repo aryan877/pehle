@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select data->>'message_id' as \"id\" from events where kind = 'checkout.card' and order_id = $1\n               order by id desc limit 1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "547a68622d3aa490d9798147c4fbe3e30c9ebcec08af93d503b7e53e953062bc"
+}

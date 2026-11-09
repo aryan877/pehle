@@ -1,0 +1,255 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select o.id, o.claim_id, o.seller_id, o.buyer_id, o.item_id, o.live_id, o.amount_paise,\n                      o.status as \"status: OrderStatus\", o.upi_reference, o.ship_name, o.ship_phone,\n                      o.ship_address, o.ship_pincode, o.created_at, o.payment_reported_at, o.paid_at, o.closed_at,\n                      o.payment_link_url, o.paid_via, o.gateway_rrn, o.refund_id,\n                      i.code as item_code, i.title as item_title, i.image_path as item_image_path,\n                      case when o.status = 'paid' then i.winner_note end as winner_note,\n                      c.position as claim_position, c.hold_expires_at,\n                      b.display_name as buyer_name, b.nexconn_user_id as \"buyer_nexconn_user_id!\",\n                      s.handle::text as \"shop_handle!\", s.display_name as shop_name,\n                      s.cohost_user_id as \"shop_cohost_user_id!\", s.avatar_path as shop_avatar_path, s.is_demo as shop_is_demo,\n                      s.upi_vpa, s.upi_payee_name,\n                      l.slug as live_slug\n               from orders o\n               join items i on i.id = o.item_id\n               join claims c on c.id = o.claim_id\n               join buyers b on b.id = o.buyer_id\n               join sellers s on s.id = o.seller_id\n               join lives l on l.id = o.live_id\n               where ($1::uuid is null or o.id = $1)\n                 and ($2::uuid is null or o.seller_id = $2)\n                 and ($3::uuid is null or o.buyer_id = $3)\n                 and case $4::text\n                       when 'open' then o.status in ('awaiting_payment', 'payment_reported')\n                       when 'paid' then o.status = 'paid'\n                       else true end\n               order by case when $4::text = 'open' then (o.status = 'payment_reported')::int end desc,\n                        case when $4::text = 'paid' then o.paid_at end desc,\n                        o.created_at desc\n               limit $5",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "claim_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 2,
+        "name": "seller_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 3,
+        "name": "buyer_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 4,
+        "name": "item_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 5,
+        "name": "live_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 6,
+        "name": "amount_paise",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 7,
+        "name": "status: OrderStatus",
+        "type_info": {
+          "Custom": {
+            "name": "order_status",
+            "kind": {
+              "Enum": [
+                "awaiting_payment",
+                "payment_reported",
+                "paid",
+                "cancelled",
+                "expired"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "ordinal": 8,
+        "name": "upi_reference",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 9,
+        "name": "ship_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 10,
+        "name": "ship_phone",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 11,
+        "name": "ship_address",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 12,
+        "name": "ship_pincode",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 13,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 14,
+        "name": "payment_reported_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 15,
+        "name": "paid_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 16,
+        "name": "closed_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 17,
+        "name": "payment_link_url",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 18,
+        "name": "paid_via",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 19,
+        "name": "gateway_rrn",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 20,
+        "name": "refund_id",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 21,
+        "name": "item_code",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 22,
+        "name": "item_title",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 23,
+        "name": "item_image_path",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 24,
+        "name": "winner_note",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 25,
+        "name": "claim_position",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 26,
+        "name": "hold_expires_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 27,
+        "name": "buyer_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 28,
+        "name": "buyer_nexconn_user_id!",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 29,
+        "name": "shop_handle!",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 30,
+        "name": "shop_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 31,
+        "name": "shop_cohost_user_id!",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 32,
+        "name": "shop_avatar_path",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 33,
+        "name": "shop_is_demo",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 34,
+        "name": "upi_vpa",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 35,
+        "name": "upi_payee_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 36,
+        "name": "live_slug",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Uuid",
+        "Text",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      true,
+      null,
+      false,
+      true,
+      false,
+      true,
+      null,
+      false,
+      true,
+      true,
+      false,
+      true,
+      true,
+      false
+    ]
+  },
+  "hash": "420f7d0476c5d67647e0ca1365e0888dfb6a44d457059063da3eb11e9227fc59"
+}

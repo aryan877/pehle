@@ -1,0 +1,74 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select id as \"id!\", display_name as \"display_name!\", preferred_language as \"preferred_language!\",\n                      nexconn_user_id as \"nexconn_user_id!\", avatar_url, email::text as \"email\", phone_e164,\n                      is_demo as \"is_demo!\", is_bot as \"is_bot!\", created_at as \"created_at!\"\n               from app.demo_bots()",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id!",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "display_name!",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "preferred_language!",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "nexconn_user_id!",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "avatar_url",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "email",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "phone_e164",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "is_demo!",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 8,
+        "name": "is_bot!",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 9,
+        "name": "created_at!",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "hash": "08de131b1bbc7eda5fe31eb87515e043d57c6e623c41552d1ab3db7333524da9"
+}

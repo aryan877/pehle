@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select st.nexconn_user_id as \"id!\" from seller_staff s join staff st on st.id = s.staff_id\n               where s.seller_id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id!",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      true
+    ]
+  },
+  "hash": "01bde728db11d4250ad5c19b26d2fdd5119b57380210232d11330f37c084d3f7"
+}

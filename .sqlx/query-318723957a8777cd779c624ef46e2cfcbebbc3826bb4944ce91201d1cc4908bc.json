@@ -1,0 +1,37 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select app.gateway_paid($1, $2, $3, $4) as \"outcome!: GatewayOutcome\"",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "outcome!: GatewayOutcome",
+        "type_info": {
+          "Custom": {
+            "name": "app.gateway_outcome",
+            "kind": {
+              "Enum": [
+                "paid",
+                "already_paid",
+                "late",
+                "unknown_order"
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Text",
+        "Text",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "318723957a8777cd779c624ef46e2cfcbebbc3826bb4944ce91201d1cc4908bc"
+}

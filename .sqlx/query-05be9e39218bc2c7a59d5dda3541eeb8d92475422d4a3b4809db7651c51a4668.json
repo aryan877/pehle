@@ -1,0 +1,131 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select (r).outcome as \"outcome!: ClaimOutcome\", (r).claim_id, (r).order_id, (r).item_id,\n                      (r).item_code, (r).item_title, (r).claim_position as position,\n                      (r).status as \"status: ClaimStatus\", (r).hold_expires_at, (r).units_left,\n                      (r).waitlist_length\n               from (select app.claim($1, $2, $3, $4, $5, $6, $7) as r) s",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "outcome!: ClaimOutcome",
+        "type_info": {
+          "Custom": {
+            "name": "app.claim_outcome",
+            "kind": {
+              "Enum": [
+                "held",
+                "waitlisted",
+                "already",
+                "replay",
+                "hold_limit",
+                "no_item",
+                "closed",
+                "not_live",
+                "blocked"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "claim_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 2,
+        "name": "order_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 3,
+        "name": "item_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 4,
+        "name": "item_code",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "item_title",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "position",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 7,
+        "name": "status: ClaimStatus",
+        "type_info": {
+          "Custom": {
+            "name": "claim_status",
+            "kind": {
+              "Enum": [
+                "held",
+                "waitlisted",
+                "paid",
+                "expired",
+                "released",
+                "cancelled"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "ordinal": 8,
+        "name": "hold_expires_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 9,
+        "name": "units_left",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 10,
+        "name": "waitlist_length",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Text",
+        {
+          "Custom": {
+            "name": "claim_source",
+            "kind": {
+              "Enum": [
+                "chat",
+                "button",
+                "seller",
+                "youtube"
+              ]
+            }
+          }
+        },
+        "Text",
+        "Text",
+        "Timestamptz"
+      ]
+    },
+    "nullable": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "hash": "05be9e39218bc2c7a59d5dda3541eeb8d92475422d4a3b4809db7651c51a4668"
+}

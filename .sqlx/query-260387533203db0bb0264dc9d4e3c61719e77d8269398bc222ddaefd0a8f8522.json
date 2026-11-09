@@ -1,0 +1,91 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select v.id, v.seller_id, v.buyer_id, v.nexconn_group_id as \"nexconn_group_id!\",\n                      (v.provisioned_at is not null) as \"provisioned!\",\n                      s.handle::text as \"shop_handle!\", s.display_name as shop_name, s.avatar_path as shop_avatar_path,\n                      b.display_name as buyer_name, b.avatar_url as buyer_avatar_url,\n                      (select count(*) from orders o where o.seller_id = v.seller_id and o.buyer_id = v.buyer_id\n                          and o.status in ('awaiting_payment', 'payment_reported')) as \"open_orders!\",\n                      v.last_activity_at\n               from conversations v\n               join sellers s on s.id = v.seller_id\n               join buyers b on b.id = v.buyer_id\n               where ($1::uuid is null or v.id = $1)\n                 and ($2::uuid is null or v.seller_id = $2)\n                 and ($3::uuid is null or v.buyer_id = $3)\n               order by v.last_activity_at desc\n               limit $4",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "seller_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 2,
+        "name": "buyer_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 3,
+        "name": "nexconn_group_id!",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "provisioned!",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 5,
+        "name": "shop_handle!",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "shop_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "shop_avatar_path",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 8,
+        "name": "buyer_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 9,
+        "name": "buyer_avatar_url",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 10,
+        "name": "open_orders!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 11,
+        "name": "last_activity_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Uuid",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      null,
+      null,
+      false,
+      true,
+      false,
+      true,
+      null,
+      false
+    ]
+  },
+  "hash": "260387533203db0bb0264dc9d4e3c61719e77d8269398bc222ddaefd0a8f8522"
+}

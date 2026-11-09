@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select app.log('checkout.card', seller_id, live_id, item_id, buyer_id, claim_id, id,\n                              jsonb_build_object('message_id', $2::text))\n               from orders where id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "log",
+        "type_info": "Void"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Text"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "5d79dc84694e7d776b4c1fda2d71479dd65bdf8acde8cdd4f7489bf24e99fdcd"
+}

@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select buyer_id as \"buyer_id!\", reminded as \"reminded!\" from app.take_drop_audience($1)",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "buyer_id!",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "reminded!",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      null,
+      null
+    ]
+  },
+  "hash": "1bdf916a3dca8ccba2ade6385d108948e5af6a9c6edf584708f4c48d27d61860"
+}

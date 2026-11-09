@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select app.demo_lapse_hold($1) as \"lapsed!\"",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "lapsed!",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "1b52bab6fd80d90b27466076a8a1916ad8df39d80eb488dbca8af28165c73a4d"
+}

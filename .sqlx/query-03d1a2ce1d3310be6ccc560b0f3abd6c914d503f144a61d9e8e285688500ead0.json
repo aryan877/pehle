@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select app.live_snapshot($1) as \"s!\"",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "s!",
+        "type_info": "Jsonb"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "03d1a2ce1d3310be6ccc560b0f3abd6c914d503f144a61d9e8e285688500ead0"
+}

@@ -1,0 +1,25 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select app.link_youtube($1, $2, $3, $4) as \"buyer\"",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "buyer",
+        "type_info": "Uuid"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Text",
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "39b4c9bf5b33b6edd5a05a2dbc3c07ad950aaab0499e37fe342d81301b3eb414"
+}

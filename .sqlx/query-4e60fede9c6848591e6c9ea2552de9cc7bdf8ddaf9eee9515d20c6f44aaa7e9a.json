@@ -1,0 +1,94 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select a.id, a.seller_id, a.live_id, a.buyer_id, b.display_name as \"buyer_name?\", a.kind, a.question,\n                      a.proposed_reply, a.status as \"status: ApprovalStatus\", a.created_at, a.decided_at\n               from approvals a left join buyers b on b.id = a.buyer_id where a.id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "seller_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 2,
+        "name": "live_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 3,
+        "name": "buyer_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 4,
+        "name": "buyer_name?",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "kind",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "question",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "proposed_reply",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 8,
+        "name": "status: ApprovalStatus",
+        "type_info": {
+          "Custom": {
+            "name": "approval_status",
+            "kind": {
+              "Enum": [
+                "pending",
+                "approved",
+                "declined",
+                "expired"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "ordinal": 9,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 10,
+        "name": "decided_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "4e60fede9c6848591e6c9ea2552de9cc7bdf8ddaf9eee9515d20c6f44aaa7e9a"
+}

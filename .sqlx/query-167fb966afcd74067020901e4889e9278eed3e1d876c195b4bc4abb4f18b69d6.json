@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select app.delete_session($1)",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "delete_session",
+        "type_info": "Void"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Bytea"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "167fb966afcd74067020901e4889e9278eed3e1d876c195b4bc4abb4f18b69d6"
+}

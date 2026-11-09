@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select (app.report_payment($1, $2, $3, $4, $5, $6, $7)).id as \"id!\"",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id!",
+        "type_info": "Uuid"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Text",
+        "Text",
+        "Text",
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "17db16a02c38b9cbee6d2d70027d85533b52dd3c106cd6d6b6397e4462ad9f7b"
+}

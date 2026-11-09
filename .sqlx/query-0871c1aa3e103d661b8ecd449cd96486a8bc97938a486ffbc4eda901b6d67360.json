@@ -1,0 +1,26 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select app.save_payment_account($1, $2, $3, $4, $5)",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "save_payment_account",
+        "type_info": "Void"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Text",
+        "Bytea",
+        "Bytea"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "0871c1aa3e103d661b8ecd449cd96486a8bc97938a486ffbc4eda901b6d67360"
+}
