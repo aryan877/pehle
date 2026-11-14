@@ -1,0 +1,47 @@
+# Production: Postgres, the Rust API and Caddy on one server.
+#   cp infra/.env.production.example infra/.env.production   # fill it in
+#   docker compose -f infra/compose.yml --env-file infra/.env.production up -d --build
+name: pehle
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: pehle
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+      POSTGRES_DB: pehle
+    volumes: ["db:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pehle"]
+      interval: 5s
+      retries: 20
+    shm_size: 256mb
+
+  api:
+    build: { context: .., dockerfile: infra/api.Dockerfile }
+    restart: unless-stopped
+    depends_on: { db: { condition: service_healthy } }
+    env_file: .env.production
+    environment:
+      DATABASE_URL: postgres://pehle:${POSTGRES_PASSWORD}@db:5432/pehle
+      PEHLE_PUBLIC_URL: https://${PEHLE_DOMAIN}
+    volumes: ["media:/data/media"]
+
+  web:
+    build: { context: .., dockerfile: infra/web.Dockerfile }
+    restart: unless-stopped
+    depends_on: [api]
+    environment:
+      PEHLE_DOMAIN: ${PEHLE_DOMAIN}
+      PEHLE_SITE_ADDRESS: ${PEHLE_SITE_ADDRESS:-${PEHLE_DOMAIN}}
+    ports: ["80:80", "443:443", "443:443/udp"]
+    volumes:
+      - media:/srv/media:ro
+      - caddy-data:/data
+      - caddy-config:/config
+
+volumes:
+  db:
+  media:
+  caddy-data:
+  caddy-config:

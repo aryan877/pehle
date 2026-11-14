@@ -1,0 +1,16 @@
+# Local development: only Postgres. Run the API with `cargo run -p pehle-api` and the web app with `bun run dev`.
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: pehle
+      POSTGRES_PASSWORD: pehle
+      POSTGRES_DB: pehle
+    ports: ["54329:5432"]
+    volumes: ["pehle-db:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pehle"]
+      interval: 2s
+      retries: 20
+volumes:
+  pehle-db:

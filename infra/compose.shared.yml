@@ -1,0 +1,8 @@
+# On a shared server whose own reverse proxy already holds ports 80 and 443: the web container
+# listens on one localhost port and the host's proxy forwards the domain to it with TLS.
+#   docker compose -p pehle -f infra/compose.yml -f infra/compose.shared.yml --env-file infra/.env.production up -d --build
+services:
+  web:
+    ports: !override ["127.0.0.1:3470:80"]
+    environment:
+      PEHLE_SITE_ADDRESS: ":80"
