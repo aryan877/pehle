@@ -1,0 +1,12 @@
+{
+  "name": "@pehle/api-client",
+  "private": true,
+  "type": "module",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": {
+    "gen": "cargo run -q -p pehle-api -- openapi > openapi.json && openapi-typescript openapi.json -o src/schema.d.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": { "openapi-fetch": "^0.17.0" },
+  "devDependencies": { "openapi-typescript": "^7.13.0", "typescript": "^5.9.3" }
+}

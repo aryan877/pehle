@@ -1,0 +1,5311 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Pehle API",
+    "description": "Fair drops for Indian live sellers and creators. Mutating requests need the header `X-Pehle: 1`.",
+    "license": {
+      "name": "MIT",
+      "identifier": "MIT"
+    },
+    "version": "1"
+  },
+  "paths": {
+    "/api/v1/approvals/{approval_id}": {
+      "post": {
+        "tags": [
+          "studio"
+        ],
+        "operationId": "decide",
+        "parameters": [
+          {
+            "name": "approval_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Decision"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Approval"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/dev": {
+      "post": {
+        "tags": [
+          "session"
+        ],
+        "summary": "Local development only: sign in as a shop team member without Google.",
+        "operationId": "dev_sign_in",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DevSignIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionInfo"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/phone": {
+      "post": {
+        "tags": [
+          "session"
+        ],
+        "summary": "Sign in with a phone number verified by Firebase Authentication.",
+        "operationId": "phone_sign_in",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PhoneSignIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionInfo"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/browse": {
+      "get": {
+        "tags": [
+          "public"
+        ],
+        "summary": "What is live now, what is coming up, items to claim, and recent drops.",
+        "operationId": "browse",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "description": "A shop category such as `sarees` or `thrift`.",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Words to find in drop titles, item titles and shop names.",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "demo",
+            "in": "query",
+            "description": "Include the demo shop (the home page shows it in its own banner instead).",
+            "required": false,
+            "schema": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BrowseFeed"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/chat/token": {
+      "get": {
+        "tags": [
+          "session"
+        ],
+        "summary": "A Nexconn token issued by the server. Signed-out visitors get a read-only viewer identity\n(`v_…`): they can watch the room and its chat, and the pre-messaging webhook refuses anything\nthey try to send.",
+        "operationId": "chat_token",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatCredentials"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/claims/{claim_id}/release": {
+      "post": {
+        "tags": [
+          "room"
+        ],
+        "operationId": "release",
+        "parameters": [
+          {
+            "name": "claim_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/conversations": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "The signed-in buyer's conversations with shops, most recent first.",
+        "operationId": "my_conversations",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Conversation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/demo/join": {
+      "post": {
+        "tags": [
+          "session"
+        ],
+        "summary": "Join the demo as a guest buyer without signing in. Guests can only claim in the demo shop.\nAlready signed-in people keep their session.",
+        "operationId": "join",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/demo/race": {
+      "post": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Start a race for a fresh piece in the demo drop, or join the one already running.",
+        "operationId": "race",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DemoRace"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/demo/seller": {
+      "post": {
+        "tags": [
+          "session"
+        ],
+        "summary": "Try the seller side: a private practice shop with sample items, signed in as its owner. Open the\ndrop link in another browser (or a private window) to race yourself as a buyer.",
+        "operationId": "seller",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/lives/{live_id}": {
+      "patch": {
+        "tags": [
+          "studio"
+        ],
+        "operationId": "update_live",
+        "parameters": [
+          {
+            "name": "live_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LiveInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Live"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/lives/{live_id}/close": {
+      "post": {
+        "tags": [
+          "studio"
+        ],
+        "operationId": "close_item",
+        "parameters": [
+          {
+            "name": "live_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ItemRef"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Item"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/lives/{live_id}/console": {
+      "get": {
+        "tags": [
+          "studio"
+        ],
+        "summary": "Everything the seller's live console shows.",
+        "operationId": "live_console",
+        "parameters": [
+          {
+            "name": "live_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LiveConsole"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/lives/{live_id}/drop": {
+      "post": {
+        "tags": [
+          "studio"
+        ],
+        "operationId": "drop_item",
+        "parameters": [
+          {
+            "name": "live_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ItemRef"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Item"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/lives/{live_id}/end": {
+      "post": {
+        "tags": [
+          "studio"
+        ],
+        "operationId": "end_live",
+        "parameters": [
+          {
+            "name": "live_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Live"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/lives/{live_id}/lineup": {
+      "get": {
+        "tags": [
+          "studio"
+        ],
+        "summary": "The items announced for a drop, in order, with live availability.",
+        "operationId": "lineup",
+        "parameters": [
+          {
+            "name": "live_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PublicItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/lives/{live_id}/report": {
+      "get": {
+        "tags": [
+          "studio"
+        ],
+        "summary": "How the drop went: sell-through, money collected, non-payers replaced and leftover demand.",
+        "operationId": "report",
+        "parameters": [
+          {
+            "name": "live_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DropReport"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/lives/{live_id}/start": {
+      "post": {
+        "tags": [
+          "studio"
+        ],
+        "summary": "Create the Nexconn room, give the team and co-host priority, then open the live.",
+        "operationId": "start_live",
+        "parameters": [
+          {
+            "name": "live_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Live"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/me/following": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Shops in the signed-in buyer's club list.",
+        "operationId": "following",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PublicShop"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/media": {
+      "post": {
+        "tags": [
+          "studio"
+        ],
+        "operationId": "upload",
+        "requestBody": {
+          "description": "One `file` field: a JPEG, PNG or WebP up to 6 MB.",
+          "content": {
+            "multipart/form-data": {}
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Uploaded"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/orders/mine": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "operationId": "my_orders",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrderView"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/orders/{order_id}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "operationId": "get_order",
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Checkout"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/orders/{order_id}/cancel": {
+      "post": {
+        "tags": [
+          "studio"
+        ],
+        "operationId": "cancel_order",
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CancelOrder"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderView"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/orders/{order_id}/check": {
+      "post": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Ask the gateway now (used when the buyer returns from the payment page).",
+        "operationId": "check",
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Checkout"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/orders/{order_id}/confirm": {
+      "post": {
+        "tags": [
+          "studio"
+        ],
+        "operationId": "confirm_payment",
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderView"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/orders/{order_id}/pay": {
+      "post": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Save delivery details and get the shop's payment page for this order.",
+        "operationId": "pay",
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PayOrder"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentPage"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/orders/{order_id}/payment": {
+      "post": {
+        "tags": [
+          "room"
+        ],
+        "operationId": "report_payment",
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportPayment"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Checkout"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/push/key": {
+      "get": {
+        "tags": [
+          "session"
+        ],
+        "operationId": "key",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PushKey"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/push/subscriptions": {
+      "post": {
+        "tags": [
+          "session"
+        ],
+        "operationId": "subscribe",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Subscription"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "session"
+        ],
+        "operationId": "unsubscribe",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Unsubscribe"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/rooms/{slug}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "operationId": "get_room",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomView"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rooms/{slug}/claims": {
+      "post": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Claim without chat (used when the chat connection is down). The same rules apply, and the\nserver posts the receipt into the room.",
+        "operationId": "claim",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ButtonClaim"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaimResult"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rooms/{slug}/fairness": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "The public record of who claimed what, and when. Anyone can check the queue.",
+        "operationId": "fairness",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "description": "Return events after this ID, for paging.",
+            "required": false,
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FairnessLog"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rooms/{slug}/remind": {
+      "post": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Turn \"Remind me\" on or off for an upcoming drop.",
+        "operationId": "remind",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Reminder"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rooms/{slug}/youtube-code": {
+      "post": {
+        "tags": [
+          "room"
+        ],
+        "summary": "A one-time code that links the signed-in buyer's YouTube name, so \"mine\" typed in the YouTube\nchat claims for this account and any earlier YouTube claims move over.",
+        "operationId": "youtube_code",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/YoutubeLinkCode"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/session": {
+      "get": {
+        "tags": [
+          "session"
+        ],
+        "operationId": "get_session",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/session/buyer": {
+      "post": {
+        "tags": [
+          "session"
+        ],
+        "summary": "Change the signed-in buyer's display name and language. In local development (no Google) this\nalso creates a buyer from just a name.",
+        "operationId": "join_as_buyer",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JoinAsBuyer"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionInfo"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/session/logout": {
+      "post": {
+        "tags": [
+          "session"
+        ],
+        "operationId": "logout",
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/shops": {
+      "post": {
+        "tags": [
+          "studio"
+        ],
+        "operationId": "create_shop",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewShop"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Seller"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/shops/by-handle/{handle}": {
+      "get": {
+        "tags": [
+          "public"
+        ],
+        "operationId": "public_shop",
+        "parameters": [
+          {
+            "name": "handle",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicShop"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/shops/by-handle/{handle}/conversation": {
+      "post": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Open (or create) the buyer's conversation with a shop. The Nexconn group is ready when this returns.",
+        "operationId": "open_conversation",
+        "parameters": [
+          {
+            "name": "handle",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Conversation"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/shops/by-handle/{handle}/follow": {
+      "post": {
+        "tags": [
+          "room"
+        ],
+        "operationId": "follow",
+        "parameters": [
+          {
+            "name": "handle",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "room"
+        ],
+        "operationId": "unfollow",
+        "parameters": [
+          {
+            "name": "handle",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/shops/by-handle/{handle}/orders": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Orders between the signed-in buyer and one shop, for the conversation side panel.",
+        "operationId": "orders_with_shop",
+        "parameters": [
+          {
+            "name": "handle",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrderView"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/shops/by-handle/{handle}/page": {
+      "get": {
+        "tags": [
+          "public"
+        ],
+        "summary": "A shop's public page: its record, drops and catalogue.",
+        "operationId": "shop_page",
+        "parameters": [
+          {
+            "name": "handle",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShopPage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/shops/{shop_id}": {
+      "get": {
+        "tags": [
+          "studio"
+        ],
+        "operationId": "get_shop",
+        "parameters": [
+          {
+            "name": "shop_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Seller"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "studio"
+        ],
+        "operationId": "update_shop",
+        "parameters": [
+          {
+            "name": "shop_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShopSettings"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Seller"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/shops/{shop_id}/approvals": {
+      "get": {
+        "tags": [
+          "studio"
+        ],
+        "operationId": "pending",
+        "parameters": [
+          {
+            "name": "shop_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Approval"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/shops/{shop_id}/blocked": {
+      "post": {
+        "tags": [
+          "studio"
+        ],
+        "summary": "Stop a buyer from claiming in this shop's rooms and mute them in the current live's chat.",
+        "operationId": "block_buyer",
+        "parameters": [
+          {
+            "name": "shop_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BuyerRef"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/shops/{shop_id}/blocked/{buyer_id}": {
+      "delete": {
+        "tags": [
+          "studio"
+        ],
+        "operationId": "unblock_buyer",
+        "parameters": [
+          {
+            "name": "shop_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "buyer_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/shops/{shop_id}/buyers/{buyer_id}/orders": {
+      "get": {
+        "tags": [
+          "studio"
+        ],
+        "summary": "Orders between the shop and one buyer, for the inbox side panel.",
+        "operationId": "buyer_orders",
+        "parameters": [
+          {
+            "name": "shop_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "buyer_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrderView"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/shops/{shop_id}/conversations": {
+      "get": {
+        "tags": [
+          "studio"
+        ],
+        "summary": "Buyer conversations for the shop's inbox, most recent first.",
+        "operationId": "conversations",
+        "parameters": [
+          {
+            "name": "shop_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Conversation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/shops/{shop_id}/items": {
+      "get": {
+        "tags": [
+          "studio"
+        ],
+        "operationId": "list_items",
+        "parameters": [
+          {
+            "name": "shop_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ItemWithCounts"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "studio"
+        ],
+        "operationId": "create_item",
+        "parameters": [
+          {
+            "name": "shop_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ItemInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Item"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/shops/{shop_id}/items/{item_id}": {
+      "put": {
+        "tags": [
+          "studio"
+        ],
+        "operationId": "update_item",
+        "parameters": [
+          {
+            "name": "shop_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ItemInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Item"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "studio"
+        ],
+        "operationId": "archive_item",
+        "parameters": [
+          {
+            "name": "shop_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/shops/{shop_id}/lives": {
+      "get": {
+        "tags": [
+          "studio"
+        ],
+        "operationId": "list_lives",
+        "parameters": [
+          {
+            "name": "shop_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Live"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "studio"
+        ],
+        "operationId": "create_live",
+        "parameters": [
+          {
+            "name": "shop_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LiveInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Live"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/shops/{shop_id}/orders": {
+      "get": {
+        "tags": [
+          "studio"
+        ],
+        "operationId": "shop_orders",
+        "parameters": [
+          {
+            "name": "shop_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "description": "`open` (default), `paid` or `all`.",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrderView"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/shops/{shop_id}/payments": {
+      "get": {
+        "tags": [
+          "studio"
+        ],
+        "operationId": "get_setup",
+        "parameters": [
+          {
+            "name": "shop_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentSetup"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "studio"
+        ],
+        "summary": "Connect the shop's own Razorpay account. Keys are checked with Razorpay, then stored encrypted.",
+        "operationId": "connect",
+        "parameters": [
+          {
+            "name": "shop_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConnectRazorpay"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentSetup"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "studio"
+        ],
+        "operationId": "disconnect",
+        "parameters": [
+          {
+            "name": "shop_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/shops/{shop_id}/stats": {
+      "get": {
+        "tags": [
+          "studio"
+        ],
+        "operationId": "shop_stats",
+        "parameters": [
+          {
+            "name": "shop_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "days",
+            "in": "query",
+            "description": "Only count the last N days (1 to 365). Omit for all time.",
+            "required": false,
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Stats"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/stats": {
+      "get": {
+        "tags": [
+          "public"
+        ],
+        "summary": "Usage across all shops: the traction numbers in the submission come from here.",
+        "operationId": "public_stats",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Stats"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Approval": {
+        "type": "object",
+        "description": "A question the co-host would not answer alone, waiting for the shop team.",
+        "required": [
+          "id",
+          "sellerId",
+          "kind",
+          "question",
+          "proposedReply",
+          "status",
+          "createdAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sellerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "liveId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "buyerId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "buyerName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "kind": {
+            "type": "string"
+          },
+          "question": {
+            "type": "string"
+          },
+          "proposedReply": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ApprovalStatus"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "decidedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      },
+      "ApprovalStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "approved",
+          "declined",
+          "expired"
+        ]
+      },
+      "BrowseFeed": {
+        "type": "object",
+        "required": [
+          "live",
+          "upcoming",
+          "picks",
+          "recent"
+        ],
+        "properties": {
+          "live": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DropCard"
+            }
+          },
+          "upcoming": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DropCard"
+            }
+          },
+          "picks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PickCard"
+            }
+          },
+          "recent": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DropCard"
+            }
+          }
+        }
+      },
+      "ButtonClaim": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Item code; omit to claim the pinned item."
+          }
+        }
+      },
+      "Buyer": {
+        "type": "object",
+        "required": [
+          "id",
+          "displayName",
+          "preferredLanguage",
+          "nexconnUserId",
+          "isDemo",
+          "isBot",
+          "createdAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "preferredLanguage": {
+            "type": "string"
+          },
+          "nexconnUserId": {
+            "type": "string"
+          },
+          "avatarUrl": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Present for buyers who signed in with Google."
+          },
+          "phoneE164": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Present for buyers who signed in with a verified phone number."
+          },
+          "isDemo": {
+            "type": "boolean",
+            "description": "A demo-shop buyer (judges trying Pehle); can only claim in the demo shop."
+          },
+          "isBot": {
+            "type": "boolean",
+            "description": "A scripted rival in the demo shop. Never given a chat token or chat messages."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "BuyerRef": {
+        "type": "object",
+        "required": [
+          "buyerId"
+        ],
+        "properties": {
+          "buyerId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "CancelOrder": {
+        "type": "object",
+        "required": [
+          "reason"
+        ],
+        "properties": {
+          "reason": {
+            "type": "string"
+          }
+        }
+      },
+      "ChatCredentials": {
+        "type": "object",
+        "required": [
+          "appKey",
+          "userId",
+          "token",
+          "live"
+        ],
+        "properties": {
+          "appKey": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          },
+          "live": {
+            "type": "boolean",
+            "description": "False when the server has no Nexconn App Key; the client should show a preview banner."
+          }
+        }
+      },
+      "Checkout": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OrderView"
+          },
+          {
+            "type": "object",
+            "required": [
+              "reference",
+              "viewerIsStaff",
+              "gateway"
+            ],
+            "properties": {
+              "reference": {
+                "type": "string"
+              },
+              "upiUrl": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "`upi://pay` link with amount and note filled in; null if the shop has not set a UPI ID."
+              },
+              "viewerIsStaff": {
+                "type": "boolean",
+                "description": "True when the viewer is on the shop's team rather than the buyer."
+              },
+              "gateway": {
+                "type": "boolean",
+                "description": "True when the shop has a payment gateway connected, so payment is confirmed automatically."
+              }
+            }
+          }
+        ]
+      },
+      "ClaimOutcome": {
+        "type": "string",
+        "description": "What `app.claim` decided.",
+        "enum": [
+          "held",
+          "waitlisted",
+          "already",
+          "replay",
+          "hold_limit",
+          "no_item",
+          "closed",
+          "not_live",
+          "blocked"
+        ]
+      },
+      "ClaimResult": {
+        "type": "object",
+        "required": [
+          "outcome"
+        ],
+        "properties": {
+          "outcome": {
+            "$ref": "#/components/schemas/ClaimOutcome"
+          },
+          "claimId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "orderId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "itemId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "itemCode": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "itemTitle": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "position": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int32"
+          },
+          "status": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ClaimStatus"
+              }
+            ]
+          },
+          "holdExpiresAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "unitsLeft": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int32"
+          },
+          "waitlistLength": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int32"
+          }
+        }
+      },
+      "ClaimSource": {
+        "type": "string",
+        "enum": [
+          "chat",
+          "button",
+          "seller",
+          "youtube"
+        ]
+      },
+      "ClaimStatus": {
+        "type": "string",
+        "enum": [
+          "held",
+          "waitlisted",
+          "paid",
+          "expired",
+          "released",
+          "cancelled"
+        ]
+      },
+      "ConnectRazorpay": {
+        "type": "object",
+        "required": [
+          "keyId",
+          "keySecret"
+        ],
+        "properties": {
+          "keyId": {
+            "type": "string",
+            "description": "From Razorpay Dashboard > Account & Settings > API Keys. Starts with rzp_test_ or rzp_live_."
+          },
+          "keySecret": {
+            "type": "string"
+          }
+        }
+      },
+      "Conversation": {
+        "type": "object",
+        "description": "One buyer↔shop thread, backed by a Nexconn group channel.",
+        "required": [
+          "id",
+          "sellerId",
+          "buyerId",
+          "nexconnGroupId",
+          "provisioned",
+          "shopHandle",
+          "shopName",
+          "buyerName",
+          "openOrders",
+          "lastActivityAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sellerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "buyerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "nexconnGroupId": {
+            "type": "string"
+          },
+          "provisioned": {
+            "type": "boolean"
+          },
+          "shopHandle": {
+            "type": "string"
+          },
+          "shopName": {
+            "type": "string"
+          },
+          "shopAvatarPath": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "buyerName": {
+            "type": "string"
+          },
+          "buyerAvatarUrl": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "openOrders": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Orders still waiting on someone (payment or confirmation)."
+          },
+          "lastActivityAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Decision": {
+        "type": "object",
+        "required": [
+          "approve"
+        ],
+        "properties": {
+          "approve": {
+            "type": "boolean"
+          },
+          "reply": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional edited reply to post instead of the co-host's draft."
+          }
+        }
+      },
+      "DemoRace": {
+        "type": "object",
+        "description": "What the visitor needs to join the current race.",
+        "required": [
+          "slug",
+          "itemCode",
+          "itemTitle",
+          "started"
+        ],
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "itemCode": {
+            "type": "string"
+          },
+          "itemTitle": {
+            "type": "string"
+          },
+          "started": {
+            "type": "boolean",
+            "description": "False when the visitor joined a race that was already running."
+          }
+        }
+      },
+      "DevSignIn": {
+        "type": "object",
+        "required": [
+          "email",
+          "displayName"
+        ],
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          }
+        }
+      },
+      "DropCard": {
+        "type": "object",
+        "description": "A drop on the home page or a shop page.",
+        "required": [
+          "id",
+          "slug",
+          "title",
+          "status",
+          "hasStream",
+          "shopHandle",
+          "shopName",
+          "shopCategory",
+          "items",
+          "claims",
+          "reminders",
+          "watching",
+          "reminded"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "$ref": "#/components/schemas/LiveStatus"
+          },
+          "scheduledFor": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "startedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "endedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "youtubeVideoId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "hasStream": {
+            "type": "boolean"
+          },
+          "coverPath": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The pinned item's photo, else the first lineup photo."
+          },
+          "shopHandle": {
+            "type": "string"
+          },
+          "shopName": {
+            "type": "string"
+          },
+          "shopAvatarPath": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "shopCity": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "shopCategory": {
+            "type": "string"
+          },
+          "items": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "claims": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "reminders": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "watching": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Signed-in people who opened the room in the last 15 minutes."
+          },
+          "reminded": {
+            "type": "boolean",
+            "description": "The signed-in buyer asked to be reminded about this drop."
+          }
+        }
+      },
+      "DropReport": {
+        "type": "object",
+        "description": "How a finished (or running) drop went, from the decision log.",
+        "required": [
+          "itemsDropped",
+          "unitsOffered",
+          "unitsSold",
+          "revenuePaise",
+          "claims",
+          "claimants",
+          "viewersSignedIn",
+          "visitors",
+          "nonPayersReplaced",
+          "stillWaiting",
+          "paidViaGateway",
+          "newClubMembers",
+          "items"
+        ],
+        "properties": {
+          "itemsDropped": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "unitsOffered": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "unitsSold": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "revenuePaise": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "claims": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "claimants": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "viewersSignedIn": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "visitors": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Everyone who entered the room, including signed-out viewers (from Nexconn join events)."
+          },
+          "nonPayersReplaced": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Holds that lapsed unpaid and went to the next person in line."
+          },
+          "stillWaiting": {
+            "type": "integer",
+            "format": "int64",
+            "description": "People still waiting when the report ran: demand for a restock."
+          },
+          "paidViaGateway": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "medianSellOutSeconds": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "format": "double",
+            "description": "Median seconds from an item opening to its last unit being claimed."
+          },
+          "newClubMembers": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DropReportItem"
+            }
+          }
+        }
+      },
+      "DropReportItem": {
+        "type": "object",
+        "required": [
+          "itemId",
+          "code",
+          "title",
+          "quantity",
+          "sold",
+          "held",
+          "waiting",
+          "claims"
+        ],
+        "properties": {
+          "itemId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sold": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "held": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "waiting": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "claims": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "sellOutSeconds": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "format": "double"
+          }
+        }
+      },
+      "ErrorBody": {
+        "type": "object",
+        "description": "Every error response: `{ \"error\": { \"code\": \"...\", \"message\": \"...\" } }`. Messages are written for\nthe person using the app.",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          }
+        }
+      },
+      "ErrorDetail": {
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "Event": {
+        "type": "object",
+        "required": [
+          "id",
+          "at",
+          "kind",
+          "data"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "itemId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "claimId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      },
+      "FairEntry": {
+        "type": "object",
+        "description": "A queue position without anything that identifies the buyer beyond their chosen display name.",
+        "required": [
+          "itemCode",
+          "source",
+          "position",
+          "status",
+          "buyerName",
+          "decidedAt"
+        ],
+        "properties": {
+          "itemCode": {
+            "type": "string"
+          },
+          "source": {
+            "$ref": "#/components/schemas/ClaimSource",
+            "description": "Where the claim came from: Pehle chat, the claim button, the seller, or YouTube chat."
+          },
+          "position": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ClaimStatus"
+          },
+          "buyerName": {
+            "type": "string"
+          },
+          "decidedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "nexconnReceivedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      },
+      "FairnessLog": {
+        "type": "object",
+        "required": [
+          "live",
+          "shop",
+          "events",
+          "queue"
+        ],
+        "properties": {
+          "live": {
+            "$ref": "#/components/schemas/PublicLive"
+          },
+          "shop": {
+            "$ref": "#/components/schemas/PublicShop"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Event"
+            },
+            "description": "Every claim decision in order, as recorded in the same transaction that made it."
+          },
+          "queue": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FairEntry"
+            }
+          }
+        }
+      },
+      "FirebaseWebConfig": {
+        "type": "object",
+        "description": "What the browser needs to start Firebase Authentication.",
+        "required": [
+          "apiKey",
+          "authDomain",
+          "projectId"
+        ],
+        "properties": {
+          "apiKey": {
+            "type": "string"
+          },
+          "authDomain": {
+            "type": "string"
+          },
+          "projectId": {
+            "type": "string"
+          }
+        }
+      },
+      "Item": {
+        "type": "object",
+        "required": [
+          "id",
+          "sellerId",
+          "code",
+          "title",
+          "pricePaise",
+          "quantity",
+          "galleryPaths",
+          "status",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sellerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "pricePaise": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "imagePath": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "galleryPaths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "winnerNote": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Shown only to the shop team and to buyers who won the item."
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus"
+          },
+          "openLiveId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "openedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ItemInput": {
+        "type": "object",
+        "required": [
+          "code",
+          "title",
+          "pricePaise",
+          "quantity"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "What the seller says on stream, for example `S12`. 1 to 8 letters or digits."
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "pricePaise": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Price in paise (₹1 = 100)."
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "imagePath": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "A path returned by `POST /api/v1/media`."
+          },
+          "galleryPaths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Up to eight more photo paths, shown after the cover."
+          },
+          "winnerNote": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Shown only to buyers who win the item: a coupon code, a link, a thank-you note."
+          }
+        }
+      },
+      "ItemRef": {
+        "type": "object",
+        "required": [
+          "itemId"
+        ],
+        "properties": {
+          "itemId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "ItemStatus": {
+        "type": "string",
+        "enum": [
+          "ready",
+          "open",
+          "closed"
+        ]
+      },
+      "ItemWithCounts": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Item"
+          },
+          {
+            "type": "object",
+            "required": [
+              "held",
+              "paid",
+              "waitlist",
+              "unitsLeft"
+            ],
+            "properties": {
+              "held": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "paid": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "waitlist": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "unitsLeft": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          }
+        ],
+        "description": "An item with its live counts."
+      },
+      "JoinAsBuyer": {
+        "type": "object",
+        "required": [
+          "displayName"
+        ],
+        "properties": {
+          "displayName": {
+            "type": "string",
+            "description": "Shown next to claims in the room. 1 to 40 characters."
+          },
+          "preferredLanguage": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "ISO 639-1 code for translation, for example `hi` or `en`."
+          }
+        }
+      },
+      "Live": {
+        "type": "object",
+        "required": [
+          "id",
+          "sellerId",
+          "slug",
+          "title",
+          "status",
+          "nexconnChannelId",
+          "lineupCount",
+          "createdAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sellerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "streamUrl": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "$ref": "#/components/schemas/LiveStatus"
+          },
+          "scheduledFor": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "When an upcoming drop is announced to start."
+          },
+          "pinnedItemId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "nexconnChannelId": {
+            "type": "string"
+          },
+          "youtubeVideoId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Set when the stream link is a YouTube video; its live chat is then read for claims."
+          },
+          "youtubeLiveChatId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Present once Pehle has found the stream's active live chat."
+          },
+          "lineupCount": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Items announced in the drop's lineup."
+          },
+          "coverPath": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The pinned item's photo, else the first lineup photo."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "startedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "endedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      },
+      "LiveConsole": {
+        "type": "object",
+        "required": [
+          "live",
+          "roomUrl",
+          "snapshot",
+          "queue",
+          "items"
+        ],
+        "properties": {
+          "live": {
+            "$ref": "#/components/schemas/Live"
+          },
+          "roomUrl": {
+            "type": "string"
+          },
+          "snapshot": {
+            "type": "object"
+          },
+          "queue": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueueEntry"
+            }
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemWithCounts"
+            }
+          }
+        }
+      },
+      "LiveInput": {
+        "type": "object",
+        "required": [
+          "title"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "streamUrl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The seller's YouTube or Instagram live link, shown in the room."
+          },
+          "scheduledFor": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "When the drop starts. Upcoming drops appear on the home page with a Remind me button."
+          },
+          "itemIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Catalogue items in this drop, in the order buyers see them."
+          }
+        }
+      },
+      "LiveStatus": {
+        "type": "string",
+        "enum": [
+          "draft",
+          "live",
+          "ended"
+        ]
+      },
+      "Me": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "anonymous"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "buyer",
+              "kind"
+            ],
+            "properties": {
+              "buyer": {
+                "$ref": "#/components/schemas/Buyer"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "buyer"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "staff",
+              "shops",
+              "kind"
+            ],
+            "properties": {
+              "staff": {
+                "$ref": "#/components/schemas/Staff"
+              },
+              "shops": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShopMembership"
+                }
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "staff"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "NewShop": {
+        "type": "object",
+        "required": [
+          "handle",
+          "displayName"
+        ],
+        "properties": {
+          "handle": {
+            "type": "string",
+            "description": "Lowercase letters, digits and hyphens; 3 to 30 characters. Appears in links."
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "description": "One of the shop categories, for example `sarees` or `thrift`."
+          },
+          "city": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "upiVpa": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "upiPayeeName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "Order": {
+        "type": "object",
+        "required": [
+          "id",
+          "claimId",
+          "sellerId",
+          "buyerId",
+          "itemId",
+          "liveId",
+          "amountPaise",
+          "status",
+          "createdAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "claimId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sellerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "buyerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "itemId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "liveId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "amountPaise": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "status": {
+            "$ref": "#/components/schemas/OrderStatus"
+          },
+          "upiReference": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "shipName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "shipPhone": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "shipAddress": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "shipPincode": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "paymentReportedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "paidAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "closedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "paymentLinkUrl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Hosted payment page on the seller's gateway, when the shop has one connected."
+          },
+          "paidVia": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "`gateway` (confirmed by the payment provider) or `seller_confirmed`."
+          },
+          "gatewayRrn": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "refundId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "OrderStatus": {
+        "type": "string",
+        "enum": [
+          "awaiting_payment",
+          "payment_reported",
+          "paid",
+          "cancelled",
+          "expired"
+        ]
+      },
+      "OrderView": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Order"
+          },
+          {
+            "type": "object",
+            "required": [
+              "itemCode",
+              "itemTitle",
+              "claimPosition",
+              "buyerName",
+              "buyerNexconnUserId",
+              "shopHandle",
+              "shopName",
+              "shopCohostUserId",
+              "shopIsDemo",
+              "liveSlug"
+            ],
+            "properties": {
+              "itemCode": {
+                "type": "string"
+              },
+              "itemTitle": {
+                "type": "string"
+              },
+              "itemImagePath": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "claimPosition": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "holdExpiresAt": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "buyerName": {
+                "type": "string"
+              },
+              "buyerNexconnUserId": {
+                "type": "string"
+              },
+              "shopHandle": {
+                "type": "string"
+              },
+              "shopName": {
+                "type": "string"
+              },
+              "shopCohostUserId": {
+                "type": "string"
+              },
+              "shopAvatarPath": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "shopIsDemo": {
+                "type": "boolean",
+                "description": "The order is in the demo shop: payments are simulated."
+              },
+              "upiVpa": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "upiPayeeName": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "liveSlug": {
+                "type": "string"
+              },
+              "winnerNote": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "The item's private note, present once the order is paid."
+              }
+            }
+          }
+        ],
+        "description": "An order with everything checkout needs to render, from either side."
+      },
+      "PayOrder": {
+        "type": "object",
+        "required": [
+          "shipName",
+          "shipPhone",
+          "shipAddress",
+          "shipPincode"
+        ],
+        "properties": {
+          "shipName": {
+            "type": "string"
+          },
+          "shipPhone": {
+            "type": "string"
+          },
+          "shipAddress": {
+            "type": "string"
+          },
+          "shipPincode": {
+            "type": "string"
+          }
+        }
+      },
+      "PaymentPage": {
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Razorpay's hosted page: UPI apps on phones, a QR on computers, cards and netbanking too."
+          }
+        }
+      },
+      "PaymentSetup": {
+        "type": "object",
+        "required": [
+          "connected",
+          "liveMode",
+          "webhookUrl",
+          "webhookEvents",
+          "available"
+        ],
+        "properties": {
+          "connected": {
+            "type": "boolean"
+          },
+          "provider": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "keyId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "liveMode": {
+            "type": "boolean",
+            "description": "Test keys move no real money."
+          },
+          "webhookUrl": {
+            "type": "string",
+            "description": "Paste into Razorpay: Settings > Webhooks > Add new webhook."
+          },
+          "webhookSecret": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "webhookEvents": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "available": {
+            "type": "boolean",
+            "description": "False when the server cannot store gateway secrets (missing PEHLE_SECRET_KEY)."
+          }
+        }
+      },
+      "PhoneSignIn": {
+        "type": "object",
+        "required": [
+          "idToken"
+        ],
+        "properties": {
+          "idToken": {
+            "type": "string",
+            "description": "The Firebase ID token from `user.getIdToken()` after the SMS code was confirmed."
+          },
+          "as": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "`buyer` (default) or `staff`."
+          },
+          "displayName": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Shown in rooms for new accounts. Defaults to \"Buyer 1234\" from the number's last digits."
+          }
+        }
+      },
+      "PickCard": {
+        "type": "object",
+        "description": "An item on the home grid: something you can claim now or in an upcoming drop.",
+        "required": [
+          "itemId",
+          "code",
+          "title",
+          "pricePaise",
+          "quantity",
+          "unitsLeft",
+          "status",
+          "shopHandle",
+          "shopName",
+          "dropSlug",
+          "dropStatus"
+        ],
+        "properties": {
+          "itemId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "pricePaise": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "imagePath": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "unitsLeft": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus"
+          },
+          "shopHandle": {
+            "type": "string"
+          },
+          "shopName": {
+            "type": "string"
+          },
+          "shopCity": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "dropSlug": {
+            "type": "string"
+          },
+          "dropStatus": {
+            "$ref": "#/components/schemas/LiveStatus"
+          },
+          "dropScheduledFor": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      },
+      "PublicItem": {
+        "type": "object",
+        "description": "An item as buyers see it: no winner note.",
+        "required": [
+          "id",
+          "code",
+          "title",
+          "pricePaise",
+          "quantity",
+          "galleryPaths",
+          "status",
+          "unitsLeft",
+          "waitlist"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "pricePaise": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "imagePath": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "galleryPaths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus"
+          },
+          "openedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "When the item last opened for claims."
+          },
+          "unitsLeft": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "waitlist": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "PublicLive": {
+        "type": "object",
+        "required": [
+          "slug",
+          "title",
+          "status",
+          "nexconnChannelId",
+          "youtubeChat"
+        ],
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "streamUrl": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "$ref": "#/components/schemas/LiveStatus"
+          },
+          "scheduledFor": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "nexconnChannelId": {
+            "type": "string"
+          },
+          "startedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "endedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "youtubeChat": {
+            "type": "boolean",
+            "description": "True when claims typed in the stream's YouTube chat also count."
+          }
+        }
+      },
+      "PublicShop": {
+        "type": "object",
+        "description": "A shop as buyers see it: no payment configuration beyond what checkout needs.",
+        "required": [
+          "id",
+          "handle",
+          "displayName",
+          "category",
+          "isDemo",
+          "holdMinutes",
+          "cohostUserId",
+          "nexconnGroupId"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "handle": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "tagline": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "category": {
+            "type": "string"
+          },
+          "city": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "avatarPath": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "coverPath": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "isDemo": {
+            "type": "boolean"
+          },
+          "holdMinutes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cohostUserId": {
+            "type": "string"
+          },
+          "nexconnGroupId": {
+            "type": "string"
+          }
+        }
+      },
+      "PushKey": {
+        "type": "object",
+        "properties": {
+          "publicKey": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Pass to `pushManager.subscribe({ applicationServerKey })`. Null when push is not configured."
+          }
+        }
+      },
+      "QueueEntry": {
+        "type": "object",
+        "description": "A claim with the buyer's display name, for the seller's queue and the public fairness log.",
+        "required": [
+          "claimId",
+          "buyerId",
+          "itemId",
+          "itemCode",
+          "position",
+          "status",
+          "source",
+          "buyerName",
+          "decidedAt"
+        ],
+        "properties": {
+          "claimId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "buyerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "itemId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "itemCode": {
+            "type": "string"
+          },
+          "position": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ClaimStatus"
+          },
+          "source": {
+            "$ref": "#/components/schemas/ClaimSource"
+          },
+          "buyerName": {
+            "type": "string"
+          },
+          "said": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "decidedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "nexconnReceivedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "holdExpiresAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "orderId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "orderStatus": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/OrderStatus"
+              }
+            ]
+          }
+        }
+      },
+      "Reminder": {
+        "type": "object",
+        "required": [
+          "reminded"
+        ],
+        "properties": {
+          "reminded": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ReportPayment": {
+        "type": "object",
+        "required": [
+          "upiReference",
+          "shipName",
+          "shipPhone",
+          "shipAddress",
+          "shipPincode"
+        ],
+        "properties": {
+          "upiReference": {
+            "type": "string",
+            "description": "The 12-digit UPI reference (UTR) from the buyer's payment app."
+          },
+          "shipName": {
+            "type": "string"
+          },
+          "shipPhone": {
+            "type": "string"
+          },
+          "shipAddress": {
+            "type": "string"
+          },
+          "shipPincode": {
+            "type": "string"
+          }
+        }
+      },
+      "RoomView": {
+        "type": "object",
+        "required": [
+          "shop",
+          "live",
+          "snapshot",
+          "openItems",
+          "lineup",
+          "following",
+          "reminded",
+          "reminders",
+          "myClaims"
+        ],
+        "properties": {
+          "shop": {
+            "$ref": "#/components/schemas/PublicShop"
+          },
+          "live": {
+            "$ref": "#/components/schemas/PublicLive"
+          },
+          "snapshot": {
+            "type": "object",
+            "description": "Same document the room's Nexconn metadata carries, for the first paint before chat connects."
+          },
+          "openItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicItem"
+            }
+          },
+          "lineup": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicItem"
+            },
+            "description": "What the seller announced for this drop, in order."
+          },
+          "following": {
+            "type": "boolean"
+          },
+          "reminded": {
+            "type": "boolean",
+            "description": "The signed-in buyer asked to be reminded when this drop starts."
+          },
+          "reminders": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "myClaims": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueueEntry"
+            },
+            "description": "The signed-in buyer's own claims in this live."
+          }
+        }
+      },
+      "Seller": {
+        "type": "object",
+        "required": [
+          "id",
+          "handle",
+          "displayName",
+          "category",
+          "holdMinutes",
+          "maxHoldsPerBuyer",
+          "policies",
+          "isDemo",
+          "nexconnGroupId",
+          "cohostUserId",
+          "createdAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "handle": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "tagline": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "category": {
+            "type": "string"
+          },
+          "city": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "avatarPath": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "coverPath": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "upiVpa": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "upiPayeeName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "holdMinutes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxHoldsPerBuyer": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "policies": {
+            "type": "object"
+          },
+          "isDemo": {
+            "type": "boolean"
+          },
+          "nexconnGroupId": {
+            "type": "string"
+          },
+          "cohostUserId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "SessionInfo": {
+        "type": "object",
+        "required": [
+          "me",
+          "googleSignIn",
+          "devSignIn",
+          "chatLive",
+          "demo"
+        ],
+        "properties": {
+          "me": {
+            "$ref": "#/components/schemas/Me"
+          },
+          "googleSignIn": {
+            "type": "boolean",
+            "description": "Which sign-in methods this server offers."
+          },
+          "phoneSignIn": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/FirebaseWebConfig",
+                "description": "Firebase settings for phone sign-in; absent when the server has no Firebase project."
+              }
+            ]
+          },
+          "devSignIn": {
+            "type": "boolean"
+          },
+          "chatLive": {
+            "type": "boolean",
+            "description": "False when the server has no Nexconn App Key yet; chat then runs in preview mode."
+          },
+          "pushKey": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Browser push key; absent when notifications are not configured."
+          },
+          "demo": {
+            "type": "boolean",
+            "description": "The public demo drop is available at /try."
+          }
+        }
+      },
+      "ShopItem": {
+        "type": "object",
+        "description": "A catalogue item on a shop page.",
+        "required": [
+          "id",
+          "code",
+          "title",
+          "pricePaise",
+          "quantity",
+          "unitsLeft",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "pricePaise": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "imagePath": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "unitsLeft": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus"
+          }
+        }
+      },
+      "ShopMembership": {
+        "type": "object",
+        "required": [
+          "seller",
+          "role"
+        ],
+        "properties": {
+          "seller": {
+            "$ref": "#/components/schemas/Seller"
+          },
+          "role": {
+            "$ref": "#/components/schemas/StaffRole"
+          }
+        }
+      },
+      "ShopPage": {
+        "type": "object",
+        "required": [
+          "shop",
+          "trust",
+          "drops",
+          "items",
+          "following"
+        ],
+        "properties": {
+          "shop": {
+            "$ref": "#/components/schemas/PublicShop"
+          },
+          "trust": {
+            "$ref": "#/components/schemas/TrustRecord"
+          },
+          "drops": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DropCard"
+            }
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShopItem"
+            }
+          },
+          "following": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ShopSettings": {
+        "type": "object",
+        "required": [
+          "displayName",
+          "holdMinutes",
+          "maxHoldsPerBuyer"
+        ],
+        "properties": {
+          "displayName": {
+            "type": "string"
+          },
+          "tagline": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "category": {
+            "type": "string"
+          },
+          "city": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "avatarPath": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Paths returned by `POST /api/v1/media`."
+          },
+          "coverPath": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "upiVpa": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "upiPayeeName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "holdMinutes": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Minutes a winner has to pay before the next buyer is offered the item. 2 to 60."
+          },
+          "maxHoldsPerBuyer": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Unpaid holds one buyer may have at once in a live. 1 to 20."
+          },
+          "policies": {
+            "type": "object",
+            "description": "Shipping, cash on delivery, returns and sizing, in the seller's words. The co-host quotes these.",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "propertyNames": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Staff": {
+        "type": "object",
+        "required": [
+          "id",
+          "displayName",
+          "nexconnUserId"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "phoneE164": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "avatarUrl": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "nexconnUserId": {
+            "type": "string"
+          }
+        }
+      },
+      "StaffRole": {
+        "type": "string",
+        "enum": [
+          "owner",
+          "moderator"
+        ]
+      },
+      "Stats": {
+        "type": "object",
+        "description": "Usage numbers for a shop or for all of Pehle. These back the traction claims in the submission.",
+        "required": [
+          "shops",
+          "lives",
+          "buyersJoined",
+          "chatUsers",
+          "roomVisitors",
+          "buyersWhoClaimed",
+          "claims",
+          "waitlistPromotions",
+          "ordersPaid",
+          "revenuePaise",
+          "followers"
+        ],
+        "properties": {
+          "shops": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "lives": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "buyersJoined": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "chatUsers": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Distinct people (signed in or watching) whose browser connected to Nexconn chat."
+          },
+          "roomVisitors": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Distinct people who entered a drop room, from Nexconn's own join events."
+          },
+          "buyersWhoClaimed": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "claims": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "waitlistPromotions": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "ordersPaid": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "revenuePaise": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "followers": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "Subscription": {
+        "type": "object",
+        "description": "The JSON a browser's `PushSubscription.toJSON()` returns.",
+        "required": [
+          "endpoint",
+          "keys"
+        ],
+        "properties": {
+          "endpoint": {
+            "type": "string"
+          },
+          "keys": {
+            "$ref": "#/components/schemas/SubscriptionKeys"
+          }
+        }
+      },
+      "SubscriptionKeys": {
+        "type": "object",
+        "required": [
+          "p256dh",
+          "auth"
+        ],
+        "properties": {
+          "p256dh": {
+            "type": "string"
+          },
+          "auth": {
+            "type": "string"
+          }
+        }
+      },
+      "TrustRecord": {
+        "type": "object",
+        "description": "A shop's public record, computed from real claims and payments. Sellers cannot edit it.",
+        "required": [
+          "dropsRun",
+          "itemsSold",
+          "gatewayVerified",
+          "followers",
+          "acceptsGatewayPayments"
+        ],
+        "properties": {
+          "dropsRun": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "itemsSold": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "gatewayVerified": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Paid orders confirmed by the payment gateway rather than by the seller."
+          },
+          "completionRate": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "format": "double",
+            "description": "Share of holds that ended paid (0 to 1), once there are at least five closed holds."
+          },
+          "medianMinutesToPay": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "format": "double"
+          },
+          "followers": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "acceptsGatewayPayments": {
+            "type": "boolean"
+          },
+          "sellingSince": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      },
+      "Unsubscribe": {
+        "type": "object",
+        "required": [
+          "endpoint"
+        ],
+        "properties": {
+          "endpoint": {
+            "type": "string"
+          }
+        }
+      },
+      "Uploaded": {
+        "type": "object",
+        "required": [
+          "path",
+          "url"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Store this on the item, for example `media/3f9a….webp`."
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      },
+      "YoutubeLinkCode": {
+        "type": "object",
+        "required": [
+          "code",
+          "expiresAt"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Type `pehle <code>` in the stream's YouTube chat."
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "linkedAs": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Already linked YouTube name, if any."
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "session",
+      "description": "Sign-in and chat tokens"
+    },
+    {
+      "name": "room",
+      "description": "Buyer side: the live room, claims and checkout"
+    },
+    {
+      "name": "studio",
+      "description": "Seller studio: catalogue, lives and orders"
+    },
+    {
+      "name": "public",
+      "description": "Open data"
+    }
+  ]
+}

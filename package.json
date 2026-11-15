@@ -2,14 +2,21 @@
   "name": "pehle",
   "private": true,
   "packageManager": "bun@1.2.23",
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": ["apps/*", "packages/*", "crates/pehle-api"],
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "gen": "turbo run gen",
     "db:up": "docker compose -f infra/compose.dev.yml up -d db",
-    "db:migrate": "sqlx migrate run --source db/migrations"
+    "db:migrate": "sqlx migrate run --source db/migrations",
+    "db:reset": "sqlx database reset -y --source db/migrations",
+    "db:prepare": "cargo sqlx prepare --workspace -- --all-targets"
   },
   "devDependencies": {
-    "turbo": "^2.11.11"
+    "turbo": "^2.11.11",
+    "typescript": "^5.9.3"
   }
 }
