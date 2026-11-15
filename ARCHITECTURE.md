@@ -48,3 +48,43 @@ order, so concurrent calls cannot deadlock. Errors use SQLSTATE `PH403/404/409/4
 Every function appends to `events` (the public fairness log, drop reports and traction numbers) and to
 `outbox` (side effects) in the same transaction. Workers drain the outbox with retries, woken by
 `pg_notify`, so a Nexconn outage never loses or duplicates a decision.
+
+## Nexconn usage
+
+| Feature | Use |
+|---|---|
+| Open channel per drop | Chat, claims and receipts for everyone watching |
+| `open_channel:pre_messaging` | Every claim passes through the server before anyone sees it: winners are rewritten into receipts, deep waitlist places and refusals are blocked with a private reason in `extra` |
+| Open channel metadata | Room state (pinned item, units left, holds, waitlist), written only by the server; `open_channel:metadata_update` reverts anyone else's write |
+| Priority senders and high-priority messages | The shop team, the co-host and receipts get through when the room floods |
+| Group channel per buyer and shop | Private conversation: checkout cards, questions, seller replies, co-host answers |
+| Group channel per shop | The shop's club: next-drop announcements |
+| Lobby open channel | The home page's live feed of drops starting, items dropping and wins |
+| `message:send` webhook | Keeps inboxes ordered and sends buyers' questions to the co-host |
+| Server-issued tokens | The browser never sees the App Secret; signed-out visitors get read-only viewer identities |
+
+Chat IDs are letters and digits only (Nexconn's rule): `t` staff, `u` buyer, `h` co-host, `v` viewer,
+`g` club, `c` conversation, each followed by a UUID's 32 hex digits; drop channels are `live<slug>`.
+
+## Fairness
+
+A claim's place is the order in which the database serialises it, which follows the order the server
+receives it. Claims record Nexconn's receive time and the decision time, and `/fair/<slug>` publishes
+every decision and how each order was verified (gateway, seller confirmed, or free). Load test
+(`scripts/load-test.ts`): 2,000 buyers claiming 10 units at the same instant produced exactly 10 holds
+at positions 1 to 10, unique contiguous positions 1 to 2,000 and no errors.
+
+## Identity, payments and privacy
+
+- Buyers and sellers sign in with Google or a phone number (Firebase Authentication sends the SMS; the
+  API verifies Firebase's RS256 ID token against Google's keys). Rooms show first name and initial.
+- Sessions are random tokens in an HttpOnly cookie; only their SHA-256 is stored. Mutating requests
+  need the `X-Pehle: 1` header, which a cross-site form cannot send.
+- Payments go to the seller's own Razorpay account (payment links, webhook plus polling) or UPI.
+  Sellers' Razorpay secrets are sealed with AES-256-GCM. Pehle never holds funds.
+- Browser notifications use Web Push with VAPID and RFC 8291 encryption, implemented with `ring`.
+
+## Hosting
+
+One Linux server runs Postgres 17, the Rust API and Caddy (TLS, static web app, `/api` and
+`/webhooks` proxy, `/media`, and Open Graph pages for link-preview crawlers) via `infra/compose.yml`.

@@ -26,7 +26,35 @@ with Pehle's own accent. The live room keeps the stream-first Twitch and Whatnot
 - Create listing: form in the left column with a progress bar and Next button; a live preview of the
   listing on the right, updating as you type.
 
-### Pehle tokens
+### Pehle tokens (apps/web/src/styles.css)
+- `canvas` #1c1c1d, `surface` #252728, `surface-2` #2e3032, `surface-3` #3a3b3d, `line` #333436,
+  `line-strong` #4b4d50, `fg` #e2e5e9, `fg-2` #b0b3b8, `muted` #8a8d91.
+- `accent` #ff2d78 (rani pink) is the one action that matters: Claim, Sign in, Sell, primary buttons.
+  Use `accent-soft` with accent text for Marketplace's soft-blue buttons ("Sell on Pehle").
+- `gold` #ffc233 marks the waitlist and item codes in the room. `good` #3fbb46 means "it's yours"
+  and paid. `live` #ff3b30 is the LIVE badge only.
+- Fonts: Inter (with Mukta for Indic scripts) for UI; Bricolage Grotesque (`font-display`) for page
+  titles, big numbers and the wordmark.
+- Body 15px. Utilities: `.tile` (photo tile with hairline border), `.no-scrollbar`, `.tabular`.
 
-Accent, neutrals and type scale to follow once the Marketplace measurements settle. The live room
-keeps a Twitch/Whatnot-style stream layout.
+### Shared components
+- `components/shell.tsx`: `AppShell` (top bar, optional 360px sidebar at xl, phone bottom tabs),
+  `BrowseSidebar`, `SideRow`, `PhotoTile`, `Wordmark`, `CATEGORIES`, `categoryLabel`.
+- `components/sign-in.tsx`: `useSignIn()` opens the one sign-in sheet (Google, phone via Firebase,
+  local dev form, link to the demo). Never build another sign-in form.
+- `components/ui.tsx`: Button (8px corners), Card, Field, Input, Textarea, Badge, CodeChip, Avatar,
+  Sheet, Empty, Spinner, toasts, `useCountdown`.
+- `components/chat-feed.tsx`: Twitch-style chat lines and claim receipts for the room.
+
+## Copy rules
+- Sentence case everywhere. No decorative all-caps headings (small uppercase labels on badges are fine).
+- Never use em dashes, en dashes or middle dots as separators in visible text. Write "Meera Sarees,
+  Noida" or two lines, not "Meera Sarees · Noida".
+- Say exactly what happens: "First to claim gets 10 minutes to pay", "It went to the next person in
+  line". Prices in Indian format (₹4,500; ₹1,25,000), from `rupees()` in `lib/format.ts`.
+- Free items read "Free" and "First to claim wins it".
+
+## Responsive
+- Phones first (390px). Bottom tabs on phones, top-bar tabs from md, sidebar from xl (1280px).
+- Grids: 2 columns on phones, 3 at md, 4 at lg+, 5 at 2xl. 8px gaps on phones, 12px above.
+- Nothing may overflow horizontally at 320px.
