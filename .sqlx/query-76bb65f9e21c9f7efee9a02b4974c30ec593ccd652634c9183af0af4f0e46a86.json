@@ -1,0 +1,31 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select (app.update_item($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)).id as \"id!\"",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id!",
+        "type_info": "Uuid"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Text",
+        "Text",
+        "Text",
+        "Int8",
+        "Int4",
+        "Text",
+        "TextArray",
+        "Text"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "76bb65f9e21c9f7efee9a02b4974c30ec593ccd652634c9183af0af4f0e46a86"
+}

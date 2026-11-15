@@ -1,0 +1,135 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select i.id, i.seller_id, i.code, i.title, i.description, i.price_paise, i.quantity, i.image_path,\n                      i.gallery_paths, i.winner_note, i.status as \"status: ItemStatus\", i.open_live_id, i.opened_at,\n                      i.created_at, i.updated_at,\n                      count(c.id) filter (where c.status = 'held') as \"held!\",\n                      count(c.id) filter (where c.status = 'paid') as \"paid!\",\n                      count(c.id) filter (where c.status = 'waitlisted') as \"waitlist!\"\n               from items i left join claims c on c.item_id = i.id\n               where i.seller_id = $1 and i.archived_at is null\n               group by i.id order by i.created_at desc",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "seller_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 2,
+        "name": "code",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "title",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "description",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "price_paise",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 6,
+        "name": "quantity",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 7,
+        "name": "image_path",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 8,
+        "name": "gallery_paths",
+        "type_info": "TextArray"
+      },
+      {
+        "ordinal": 9,
+        "name": "winner_note",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 10,
+        "name": "status: ItemStatus",
+        "type_info": {
+          "Custom": {
+            "name": "item_status",
+            "kind": {
+              "Enum": [
+                "ready",
+                "open",
+                "closed"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "ordinal": 11,
+        "name": "open_live_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 12,
+        "name": "opened_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 13,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 14,
+        "name": "updated_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 15,
+        "name": "held!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 16,
+        "name": "paid!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 17,
+        "name": "waitlist!",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      false,
+      true,
+      false,
+      true,
+      true,
+      false,
+      false,
+      null,
+      null,
+      null
+    ]
+  },
+  "hash": "a658781048bc57c86ac225d8ea2010f7c41c8975ad7f4500713a29b53e9470ab"
+}

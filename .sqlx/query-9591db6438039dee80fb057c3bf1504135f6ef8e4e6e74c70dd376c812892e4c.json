@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select app.complete_job($1)",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "complete_job",
+        "type_info": "Void"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "9591db6438039dee80fb057c3bf1504135f6ef8e4e6e74c70dd376c812892e4c"
+}

@@ -1,0 +1,75 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select i.id, i.code, i.title, i.price_paise, i.image_path, i.quantity,\n                          greatest(i.quantity - count(c.id) filter (where c.status in ('held', 'paid')), 0) as \"units_left!\",\n                          i.status as \"status: ItemStatus\"\n                   from items i left join claims c on c.item_id = i.id\n                   where i.seller_id = $1 and i.archived_at is null\n                   group by i.id order by i.created_at desc limit 60",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "code",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "title",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "price_paise",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 4,
+        "name": "image_path",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "quantity",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 6,
+        "name": "units_left!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 7,
+        "name": "status: ItemStatus",
+        "type_info": {
+          "Custom": {
+            "name": "item_status",
+            "kind": {
+              "Enum": [
+                "ready",
+                "open",
+                "closed"
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      null,
+      false
+    ]
+  },
+  "hash": "7b52eb3821d90a20caca2c416e9703bc04f7b1660dbdae71c5d300ba8bf5577d"
+}

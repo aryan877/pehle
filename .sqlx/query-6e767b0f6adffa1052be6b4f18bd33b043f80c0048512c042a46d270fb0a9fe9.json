@@ -1,0 +1,43 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select id as \"id!\", kind as \"kind!\", payload as \"payload!\", attempts as \"attempts!\"\n               from app.lease_jobs($1, $2, $3, $4)",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "kind!",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "payload!",
+        "type_info": "Jsonb"
+      },
+      {
+        "ordinal": 3,
+        "name": "attempts!",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Float8",
+        "Int4",
+        "Bool"
+      ]
+    },
+    "nullable": [
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "hash": "6e767b0f6adffa1052be6b4f18bd33b043f80c0048512c042a46d270fb0a9fe9"
+}

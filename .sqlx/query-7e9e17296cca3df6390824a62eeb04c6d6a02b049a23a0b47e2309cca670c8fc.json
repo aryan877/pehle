@@ -1,0 +1,27 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select (app.set_shipping($1, $2, $3, $4, $5, $6)).id as \"id!\"",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id!",
+        "type_info": "Uuid"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Text",
+        "Text",
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "7e9e17296cca3df6390824a62eeb04c6d6a02b049a23a0b47e2309cca670c8fc"
+}

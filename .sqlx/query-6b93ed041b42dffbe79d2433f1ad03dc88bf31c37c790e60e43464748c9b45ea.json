@@ -1,0 +1,64 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select\n                 (select count(*) from lives where seller_id = $1 and status <> 'draft') as \"drops!\",\n                 (select count(*) from orders where seller_id = $1 and status = 'paid' and paid_via <> 'free') as \"sold!\",\n                 (select count(*) from orders where seller_id = $1 and status = 'paid' and paid_via = 'gateway') as \"gateway!\",\n                 (select count(*) from orders where seller_id = $1 and amount_paise > 0\n                     and status in ('paid', 'expired', 'cancelled')) as \"closed!\",\n                 (select percentile_cont(0.5) within group (order by extract(epoch from (paid_at - created_at)) / 60)\n                    from orders where seller_id = $1 and status = 'paid' and paid_via <> 'free') as \"median_minutes\",\n                 (select count(*) from followers where seller_id = $1) as \"followers!\",\n                 exists (select 1 from seller_payment_accounts where seller_id = $1) as \"gateway_connected!\",\n                 (select min(started_at) from lives where seller_id = $1) as \"since\"",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "drops!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "sold!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "gateway!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 3,
+        "name": "closed!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 4,
+        "name": "median_minutes",
+        "type_info": "Float8"
+      },
+      {
+        "ordinal": 5,
+        "name": "followers!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 6,
+        "name": "gateway_connected!",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 7,
+        "name": "since",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "hash": "6b93ed041b42dffbe79d2433f1ad03dc88bf31c37c790e60e43464748c9b45ea"
+}

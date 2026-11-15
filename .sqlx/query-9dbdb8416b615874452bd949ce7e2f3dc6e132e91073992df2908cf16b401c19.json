@@ -1,0 +1,82 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select\n                 (select count(distinct item_id) from events where live_id = $1 and kind = 'item.dropped') as \"dropped!\",\n                 (select count(*) from orders where live_id = $1 and status = 'paid') as \"sold!\",\n                 (select coalesce(sum(amount_paise), 0)::bigint from orders where live_id = $1 and status = 'paid') as \"revenue!\",\n                 (select count(*) from orders where live_id = $1 and status = 'paid' and paid_via = 'gateway') as \"gateway!\",\n                 (select count(*) from claims where live_id = $1) as \"claims!\",\n                 (select count(distinct buyer_id) from claims where live_id = $1) as \"claimants!\",\n                 (select count(distinct buyer_id) from events where live_id = $1 and kind = 'room.joined') as \"viewers!\",\n                 (select count(distinct u) from events e, jsonb_array_elements_text(e.data->'users') u\n                   where e.live_id = $1 and e.kind = 'room.entered') as \"visitors!\",\n                 (select count(*) from events where live_id = $1 and kind = 'hold.expired') as \"replaced!\",\n                 (select count(*) from claims where live_id = $1 and status = 'waitlisted') as \"waiting!\",\n                 (select count(*) from followers f join lives l on l.id = $1 and l.seller_id = f.seller_id\n                   where f.followed_at >= coalesce(l.started_at, l.created_at)\n                     and f.followed_at <= coalesce(l.ended_at, now())) as \"club!\"",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "dropped!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "sold!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "revenue!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 3,
+        "name": "gateway!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 4,
+        "name": "claims!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 5,
+        "name": "claimants!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 6,
+        "name": "viewers!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 7,
+        "name": "visitors!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 8,
+        "name": "replaced!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 9,
+        "name": "waiting!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 10,
+        "name": "club!",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "hash": "9dbdb8416b615874452bd949ce7e2f3dc6e132e91073992df2908cf16b401c19"
+}

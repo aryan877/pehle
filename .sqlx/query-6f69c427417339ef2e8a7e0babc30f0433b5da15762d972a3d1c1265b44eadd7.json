@@ -1,0 +1,29 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select (c).code as \"code!\", (c).expires_at as \"expires_at!\"\n               from (select app.issue_youtube_code($1, $2) as c) s",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "code!",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 1,
+        "name": "expires_at!",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      null,
+      null
+    ]
+  },
+  "hash": "6f69c427417339ef2e8a7e0babc30f0433b5da15762d972a3d1c1265b44eadd7"
+}

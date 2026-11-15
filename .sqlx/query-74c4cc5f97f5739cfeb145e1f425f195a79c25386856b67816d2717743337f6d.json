@@ -1,0 +1,83 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "with shop as (select id from sellers where not is_demo and ($1::uuid is null or id = $1))\n               select\n                 (select count(*) from sellers where id in (select id from shop)\n                     and ($2::timestamptz is null or created_at >= $2)) as \"shops!\",\n                 (select count(*) from lives where status <> 'draft' and seller_id in (select id from shop)\n                     and ($2::timestamptz is null or started_at >= $2)) as \"lives!\",\n                 (select count(distinct buyer_id) from events where kind = 'room.joined'\n                     and seller_id in (select id from shop) and ($2::timestamptz is null or at >= $2)) as \"joined!\",\n                 (select count(distinct data->>'userId') from events where kind = 'chat.online' and $1::uuid is null\n                     and ($2::timestamptz is null or at >= $2)) as \"chat_users!\",\n                 (select count(distinct u) from events e, jsonb_array_elements_text(e.data->'users') u\n                     where e.kind = 'room.entered' and e.seller_id in (select id from shop)\n                       and ($2::timestamptz is null or e.at >= $2)) as \"visitors!\",\n                 (select count(distinct c.buyer_id) from claims c join items i on i.id = c.item_id\n                     where i.seller_id in (select id from shop) and ($2::timestamptz is null or c.decided_at >= $2)) as \"claimers!\",\n                 (select count(*) from claims c join items i on i.id = c.item_id\n                     where i.seller_id in (select id from shop) and ($2::timestamptz is null or c.decided_at >= $2)) as \"claims!\",\n                 (select count(*) from events where kind = 'claim.promoted'\n                     and seller_id in (select id from shop) and ($2::timestamptz is null or at >= $2)) as \"promotions!\",\n                 (select count(*) from orders where status = 'paid' and seller_id in (select id from shop)\n                     and ($2::timestamptz is null or paid_at >= $2)) as \"paid!\",\n                 (select coalesce(sum(amount_paise), 0)::bigint from orders where status = 'paid'\n                     and seller_id in (select id from shop) and ($2::timestamptz is null or paid_at >= $2)) as \"revenue!\",\n                 (select count(*) from followers where seller_id in (select id from shop)\n                     and ($2::timestamptz is null or followed_at >= $2)) as \"followers!\"",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "shops!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "lives!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "joined!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 3,
+        "name": "chat_users!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 4,
+        "name": "visitors!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 5,
+        "name": "claimers!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 6,
+        "name": "claims!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 7,
+        "name": "promotions!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 8,
+        "name": "paid!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 9,
+        "name": "revenue!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 10,
+        "name": "followers!",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Timestamptz"
+      ]
+    },
+    "nullable": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "hash": "74c4cc5f97f5739cfeb145e1f425f195a79c25386856b67816d2717743337f6d"
+}

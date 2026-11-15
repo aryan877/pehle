@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select (app.create_shop($1, $2, $3, $4, $5, $6, $7)).id as \"id!\"",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id!",
+        "type_info": "Uuid"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Text",
+        "Text",
+        "Text",
+        "Text",
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "a345c062d0a052d64eb95f959e036f6d12f0f9f4d1999ba0c11718eea99abd34"
+}

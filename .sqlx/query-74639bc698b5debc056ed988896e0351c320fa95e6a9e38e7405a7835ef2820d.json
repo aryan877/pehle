@@ -1,0 +1,25 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select (app.upsert_google_buyer($1, $2, $3, $4)).id as \"id!\"",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id!",
+        "type_info": "Uuid"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text",
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "74639bc698b5debc056ed988896e0351c320fa95e6a9e38e7405a7835ef2820d"
+}

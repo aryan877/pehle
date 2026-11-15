@@ -1,0 +1,125 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select distinct on (i.id)\n                      i.id as item_id, i.code, i.title, i.price_paise, i.image_path, i.quantity,\n                      greatest(i.quantity - (select count(*) from claims c where c.item_id = i.id\n                                              and c.status in ('held', 'paid')), 0) as \"units_left!\",\n                      i.status as \"status: ItemStatus\",\n                      s.handle::text as \"shop_handle!\", s.display_name as shop_name, s.city as shop_city,\n                      l.slug as drop_slug, l.status as \"drop_status: LiveStatus\", l.scheduled_for as drop_scheduled_for\n               from lives l\n               join sellers s on s.id = l.seller_id\n               join items i on i.seller_id = l.seller_id and i.archived_at is null\n                    and (i.open_live_id = l.id or exists (select 1 from live_lineup x where x.live_id = l.id and x.item_id = i.id))\n               where (l.status = 'live' or (l.status = 'draft' and l.scheduled_for > now() - interval '2 hours'))\n                 and (s.is_demo = false or $1)\n                 and ($2::text is null or s.category = $2)\n                 and ($3::text is null or i.title ilike $3 or s.display_name ilike $3)\n               order by i.id, (l.status = 'live') desc\n               limit $4",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "item_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "code",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "title",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "price_paise",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 4,
+        "name": "image_path",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "quantity",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 6,
+        "name": "units_left!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 7,
+        "name": "status: ItemStatus",
+        "type_info": {
+          "Custom": {
+            "name": "item_status",
+            "kind": {
+              "Enum": [
+                "ready",
+                "open",
+                "closed"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "ordinal": 8,
+        "name": "shop_handle!",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 9,
+        "name": "shop_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 10,
+        "name": "shop_city",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 11,
+        "name": "drop_slug",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 12,
+        "name": "drop_status: LiveStatus",
+        "type_info": {
+          "Custom": {
+            "name": "live_status",
+            "kind": {
+              "Enum": [
+                "draft",
+                "live",
+                "ended"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "ordinal": 13,
+        "name": "drop_scheduled_for",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Bool",
+        "Text",
+        "Text",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      null,
+      false,
+      null,
+      false,
+      true,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "5fc8620cde93c7de308750595ef7ed15629f6aae9f348d4079ce2a141dca0f29"
+}
