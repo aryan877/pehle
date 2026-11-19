@@ -106,3 +106,8 @@ the API. [docs/KEYS.md](docs/KEYS.md) lists every key and console setting for pr
 
 One server: `docker compose -f infra/compose.yml --env-file infra/.env.production up -d --build`
 runs Postgres, the API and Caddy (TLS, web app, media, link previews).
+
+## Notes for judges
+
+Sign-in is optional: `/try` runs without an account. Phone sign-in uses the test number listed in
+[docs/KEYS.md](docs/KEYS.md).
