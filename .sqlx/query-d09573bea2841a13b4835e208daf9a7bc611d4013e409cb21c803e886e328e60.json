@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select app.conversation_provisioned($1)",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "conversation_provisioned",
+        "type_info": "Void"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "d09573bea2841a13b4835e208daf9a7bc611d4013e409cb21c803e886e328e60"
+}

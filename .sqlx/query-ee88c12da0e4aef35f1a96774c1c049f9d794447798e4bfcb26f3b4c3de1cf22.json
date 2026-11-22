@@ -1,0 +1,29 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select (app.update_live($1, $2, $3, $4, $5, $6, $7, $8)).id as \"id!\"",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id!",
+        "type_info": "Uuid"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Text",
+        "Text",
+        "Text",
+        "Text",
+        "Timestamptz",
+        "UuidArray"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "ee88c12da0e4aef35f1a96774c1c049f9d794447798e4bfcb26f3b4c3de1cf22"
+}

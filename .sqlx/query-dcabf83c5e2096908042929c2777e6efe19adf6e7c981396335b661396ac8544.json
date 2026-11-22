@@ -1,0 +1,139 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select c.id as claim_id, c.buyer_id, c.item_id, i.code as item_code, c.position,\n                      c.status as \"status: ClaimStatus\", c.source as \"source: ClaimSource\",\n                      b.display_name as buyer_name, c.said, c.decided_at, c.nexconn_received_at,\n                      c.hold_expires_at, o.id as \"order_id?\", o.status as \"order_status?: OrderStatus\"\n               from claims c\n               join items i on i.id = c.item_id\n               join buyers b on b.id = c.buyer_id\n               left join orders o on o.claim_id = c.id\n               where c.id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "claim_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "buyer_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 2,
+        "name": "item_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 3,
+        "name": "item_code",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "position",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 5,
+        "name": "status: ClaimStatus",
+        "type_info": {
+          "Custom": {
+            "name": "claim_status",
+            "kind": {
+              "Enum": [
+                "held",
+                "waitlisted",
+                "paid",
+                "expired",
+                "released",
+                "cancelled"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "ordinal": 6,
+        "name": "source: ClaimSource",
+        "type_info": {
+          "Custom": {
+            "name": "claim_source",
+            "kind": {
+              "Enum": [
+                "chat",
+                "button",
+                "seller",
+                "youtube"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "ordinal": 7,
+        "name": "buyer_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 8,
+        "name": "said",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 9,
+        "name": "decided_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 10,
+        "name": "nexconn_received_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 11,
+        "name": "hold_expires_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 12,
+        "name": "order_id?",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 13,
+        "name": "order_status?: OrderStatus",
+        "type_info": {
+          "Custom": {
+            "name": "order_status",
+            "kind": {
+              "Enum": [
+                "awaiting_payment",
+                "payment_reported",
+                "paid",
+                "cancelled",
+                "expired"
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "dcabf83c5e2096908042929c2777e6efe19adf6e7c981396335b661396ac8544"
+}

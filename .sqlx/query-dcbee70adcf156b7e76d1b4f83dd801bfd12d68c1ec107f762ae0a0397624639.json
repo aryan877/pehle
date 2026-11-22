@@ -1,0 +1,88 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select id, handle::text as \"handle!\", display_name, tagline, category, city, avatar_path, cover_path,\n                      is_demo, hold_minutes, cohost_user_id as \"cohost_user_id!\", nexconn_group_id as \"nexconn_group_id!\"\n               from sellers where id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "handle!",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "display_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "tagline",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "category",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "city",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "avatar_path",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "cover_path",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 8,
+        "name": "is_demo",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 9,
+        "name": "hold_minutes",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 10,
+        "name": "cohost_user_id!",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 11,
+        "name": "nexconn_group_id!",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      null,
+      false,
+      true,
+      false,
+      true,
+      true,
+      true,
+      false,
+      false,
+      true,
+      true
+    ]
+  },
+  "hash": "dcbee70adcf156b7e76d1b4f83dd801bfd12d68c1ec107f762ae0a0397624639"
+}

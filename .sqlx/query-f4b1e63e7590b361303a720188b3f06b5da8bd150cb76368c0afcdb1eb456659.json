@@ -1,0 +1,159 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select l.id, l.slug, l.title, l.description, l.status as \"status: LiveStatus\", l.scheduled_for,\n                      l.started_at, l.ended_at, l.youtube_video_id, (l.stream_url is not null) as \"has_stream!\",\n                      coalesce(pin.image_path, first_item.image_path) as cover_path,\n                      s.handle::text as \"shop_handle!\", s.display_name as shop_name, s.avatar_path as shop_avatar_path,\n                      s.city as shop_city, s.category as shop_category,\n                      (select count(*) from live_lineup x where x.live_id = l.id) as \"items!\",\n                      (select count(*) from claims c where c.live_id = l.id) as \"claims!\",\n                      (select count(*) from drop_reminders r where r.live_id = l.id) as \"reminders!\",\n                      case when l.status = 'live' then\n                          (select count(distinct e.buyer_id) from events e\n                            where e.live_id = l.id and e.kind = 'room.joined' and e.at > now() - interval '15 minutes')\n                      else 0 end as \"watching!\",\n                      ($7::uuid is not null and exists (\n                          select 1 from drop_reminders r where r.live_id = l.id and r.buyer_id = $7)) as \"reminded!\"\n               from lives l\n               join sellers s on s.id = l.seller_id\n               left join items pin on pin.id = l.pinned_item_id\n               left join lateral (\n                   select i.image_path from live_lineup x join items i on i.id = x.item_id\n                   where x.live_id = l.id and i.image_path is not null order by x.sort limit 1\n               ) first_item on true\n               where case $1::text\n                       when 'live' then l.status = 'live'\n                       when 'upcoming' then l.status = 'draft' and l.scheduled_for > now() - interval '2 hours'\n                       when 'recent' then l.status = 'ended' and l.ended_at > now() - interval '14 days'\n                       else l.seller_id = $2 and (l.status <> 'draft' or l.scheduled_for is not null) end\n                 and ($2::uuid is not null or s.is_demo = false or $3)\n                 and ($4::text is null or s.category = $4)\n                 and ($5::text is null or l.title ilike $5 or s.display_name ilike $5 or s.handle::text ilike $5)\n               order by case when $1::text = 'upcoming' then l.scheduled_for end asc,\n                        case when l.status = 'live' then 0 when l.status = 'draft' then 1 else 2 end,\n                        coalesce(l.started_at, l.scheduled_for, l.created_at) desc\n               limit $6",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "slug",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "title",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "description",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "status: LiveStatus",
+        "type_info": {
+          "Custom": {
+            "name": "live_status",
+            "kind": {
+              "Enum": [
+                "draft",
+                "live",
+                "ended"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "ordinal": 5,
+        "name": "scheduled_for",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 6,
+        "name": "started_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 7,
+        "name": "ended_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 8,
+        "name": "youtube_video_id",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 9,
+        "name": "has_stream!",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 10,
+        "name": "cover_path",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 11,
+        "name": "shop_handle!",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 12,
+        "name": "shop_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 13,
+        "name": "shop_avatar_path",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 14,
+        "name": "shop_city",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 15,
+        "name": "shop_category",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 16,
+        "name": "items!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 17,
+        "name": "claims!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 18,
+        "name": "reminders!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 19,
+        "name": "watching!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 20,
+        "name": "reminded!",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Uuid",
+        "Bool",
+        "Text",
+        "Text",
+        "Int8",
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      true,
+      true,
+      true,
+      null,
+      null,
+      null,
+      false,
+      true,
+      true,
+      false,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "hash": "f4b1e63e7590b361303a720188b3f06b5da8bd150cb76368c0afcdb1eb456659"
+}

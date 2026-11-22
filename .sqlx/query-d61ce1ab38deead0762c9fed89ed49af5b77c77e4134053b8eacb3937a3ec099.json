@@ -1,0 +1,25 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select (app.upsert_google_staff($1, $2, $3, $4)).id as \"id!\"",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id!",
+        "type_info": "Uuid"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text",
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "d61ce1ab38deead0762c9fed89ed49af5b77c77e4134053b8eacb3937a3ec099"
+}

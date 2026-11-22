@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select buyer_id, staff_id from app.session_principal($1)",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "buyer_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "staff_id",
+        "type_info": "Uuid"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Bytea"
+      ]
+    },
+    "nullable": [
+      null,
+      null
+    ]
+  },
+  "hash": "e247e2347f3bfc26e121bd08886de93858c6e2a658384bf72467c73f2f88b143"
+}

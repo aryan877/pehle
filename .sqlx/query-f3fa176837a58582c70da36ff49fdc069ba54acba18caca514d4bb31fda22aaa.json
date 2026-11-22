@@ -1,0 +1,33 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select role as \"role: StaffRole\" from seller_staff where seller_id = $1 and staff_id = $2",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "role: StaffRole",
+        "type_info": {
+          "Custom": {
+            "name": "staff_role",
+            "kind": {
+              "Enum": [
+                "owner",
+                "moderator"
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "f3fa176837a58582c70da36ff49fdc069ba54acba18caca514d4bb31fda22aaa"
+}

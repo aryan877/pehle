@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select app.delete_push_subscription($1)",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "delete_push_subscription",
+        "type_info": "Void"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "df249a7a7e9f6ae9abe5b1fe442429cbc48a8833ed3a436cc29d5a6f9111cb18"
+}

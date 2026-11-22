@@ -1,0 +1,25 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select (app.decide_approval($1, $2, $3, $4)).id as \"id!\"",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id!",
+        "type_info": "Uuid"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Bool",
+        "Text"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "c664bebcc5f2d61f79022fde5e920bb63cc2df5220d05cbba3d7e534db8e4a29"
+}

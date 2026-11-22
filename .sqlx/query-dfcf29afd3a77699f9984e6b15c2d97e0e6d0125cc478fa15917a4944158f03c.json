@@ -1,0 +1,99 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select i.id, i.code, i.title, i.description, i.price_paise, i.quantity, i.image_path, i.gallery_paths,\n                      i.status as \"status: ItemStatus\", i.opened_at,\n                      greatest(i.quantity - count(c.id) filter (where c.status in ('held', 'paid')), 0) as \"units_left!\",\n                      count(c.id) filter (where c.status = 'waitlisted') as \"waitlist!\"\n               from items i left join claims c on c.item_id = i.id\n               where i.open_live_id = $1\n               group by i.id order by i.opened_at",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "code",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "title",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "description",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "price_paise",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 5,
+        "name": "quantity",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 6,
+        "name": "image_path",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "gallery_paths",
+        "type_info": "TextArray"
+      },
+      {
+        "ordinal": 8,
+        "name": "status: ItemStatus",
+        "type_info": {
+          "Custom": {
+            "name": "item_status",
+            "kind": {
+              "Enum": [
+                "ready",
+                "open",
+                "closed"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "ordinal": 9,
+        "name": "opened_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 10,
+        "name": "units_left!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 11,
+        "name": "waitlist!",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      null,
+      null
+    ]
+  },
+  "hash": "dfcf29afd3a77699f9984e6b15c2d97e0e6d0125cc478fa15917a4944158f03c"
+}

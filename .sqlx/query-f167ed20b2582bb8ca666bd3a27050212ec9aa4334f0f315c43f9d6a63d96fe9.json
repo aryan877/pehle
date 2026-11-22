@@ -1,0 +1,127 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select l.id, l.seller_id, l.slug, l.title, l.description, l.stream_url, l.status as \"status: LiveStatus\",\n                      l.scheduled_for, l.pinned_item_id, l.nexconn_channel_id as \"nexconn_channel_id!\",\n                      l.youtube_video_id, l.youtube_live_chat_id,\n                      (select count(*) from live_lineup x where x.live_id = l.id) as \"lineup_count!\",\n                      (select i.image_path from live_lineup x join items i on i.id = x.item_id\n                        where x.live_id = l.id and i.image_path is not null order by x.sort limit 1) as \"cover_path\",\n                      l.created_at, l.started_at, l.ended_at\n               from lives l join sellers s on s.id = l.seller_id\n               where s.handle = 'pehle-demo' and l.status = 'live'",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "seller_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 2,
+        "name": "slug",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "title",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "description",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "stream_url",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "status: LiveStatus",
+        "type_info": {
+          "Custom": {
+            "name": "live_status",
+            "kind": {
+              "Enum": [
+                "draft",
+                "live",
+                "ended"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "ordinal": 7,
+        "name": "scheduled_for",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 8,
+        "name": "pinned_item_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 9,
+        "name": "nexconn_channel_id!",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 10,
+        "name": "youtube_video_id",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 11,
+        "name": "youtube_live_chat_id",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 12,
+        "name": "lineup_count!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 13,
+        "name": "cover_path",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 14,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 15,
+        "name": "started_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 16,
+        "name": "ended_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      null,
+      null,
+      false,
+      true,
+      true
+    ]
+  },
+  "hash": "f167ed20b2582bb8ca666bd3a27050212ec9aa4334f0f315c43f9d6a63d96fe9"
+}

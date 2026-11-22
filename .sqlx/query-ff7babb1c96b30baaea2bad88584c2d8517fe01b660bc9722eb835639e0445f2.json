@@ -1,0 +1,118 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select id, handle::text as \"handle!\", display_name, tagline, category, city, avatar_path, cover_path,\n                      upi_vpa, upi_payee_name, hold_minutes, max_holds_per_buyer, policies, is_demo,\n                      nexconn_group_id as \"nexconn_group_id!\", cohost_user_id as \"cohost_user_id!\", created_at\n               from sellers where id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "handle!",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "display_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "tagline",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "category",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "city",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "avatar_path",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "cover_path",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 8,
+        "name": "upi_vpa",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 9,
+        "name": "upi_payee_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 10,
+        "name": "hold_minutes",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 11,
+        "name": "max_holds_per_buyer",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 12,
+        "name": "policies",
+        "type_info": "Jsonb"
+      },
+      {
+        "ordinal": 13,
+        "name": "is_demo",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 14,
+        "name": "nexconn_group_id!",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 15,
+        "name": "cohost_user_id!",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 16,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      null,
+      false,
+      true,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      false
+    ]
+  },
+  "hash": "ff7babb1c96b30baaea2bad88584c2d8517fe01b660bc9722eb835639e0445f2"
+}

@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select app.touch_conversation($1)",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "touch_conversation",
+        "type_info": "Void"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "dda97e9a14e83458568b6440674276cf63e6ead1b7ebb49bac1969e9c44f7e86"
+}

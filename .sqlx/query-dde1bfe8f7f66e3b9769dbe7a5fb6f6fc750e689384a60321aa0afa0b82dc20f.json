@@ -1,0 +1,134 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select s.id, s.handle::text as \"handle!\", s.display_name, s.tagline, s.category, s.city, s.avatar_path,\n                      s.cover_path, s.upi_vpa, s.upi_payee_name, s.hold_minutes, s.max_holds_per_buyer, s.policies,\n                      s.is_demo, s.nexconn_group_id as \"nexconn_group_id!\", s.cohost_user_id as \"cohost_user_id!\",\n                      s.created_at, m.role as \"role: StaffRole\"\n               from seller_staff m join sellers s on s.id = m.seller_id\n               where m.staff_id = $1 order by s.created_at",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "handle!",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "display_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "tagline",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "category",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "city",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "avatar_path",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "cover_path",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 8,
+        "name": "upi_vpa",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 9,
+        "name": "upi_payee_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 10,
+        "name": "hold_minutes",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 11,
+        "name": "max_holds_per_buyer",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 12,
+        "name": "policies",
+        "type_info": "Jsonb"
+      },
+      {
+        "ordinal": 13,
+        "name": "is_demo",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 14,
+        "name": "nexconn_group_id!",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 15,
+        "name": "cohost_user_id!",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 16,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 17,
+        "name": "role: StaffRole",
+        "type_info": {
+          "Custom": {
+            "name": "staff_role",
+            "kind": {
+              "Enum": [
+                "owner",
+                "moderator"
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      null,
+      false,
+      true,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "dde1bfe8f7f66e3b9769dbe7a5fb6f6fc750e689384a60321aa0afa0b82dc20f"
+}

@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select youtube_name from buyers where id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "youtube_name",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      true
+    ]
+  },
+  "hash": "e55c9c51f451f3f56a58f2c181c8e88bb51b6e2fb7ac025b5861e4e5672567da"
+}
