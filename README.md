@@ -22,6 +22,7 @@ more chasing buyers who go silent.
 - Live: https://pehle.aryankumar.dev (judges start at https://pehle.aryankumar.dev/try, no sign-in)
 - Demo video: https://youtu.be/i4_FoM_UAE8
 - Nexconn App Key: `uwd1c0sxumo71`
+- Write-up: [docs/Pehle-writeup.pdf](docs/Pehle-writeup.pdf)
 
 ## What it looks like
 
