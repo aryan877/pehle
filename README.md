@@ -1,4 +1,14 @@
-# Pehle
+<p align="center"><img src="docs/img/logo.svg" width="76" alt="Pehle logo"></p>
+<h1 align="center">Pehle</h1>
+<p align="center"><b>Fair live drops for India's live sellers.</b><br>Buyers type "mine" in the live chat. Pehle decides who was first before anyone sees the message.</p>
+<p align="center">
+  <a href="https://pehle.aryankumar.dev/try"><img alt="Try the live demo" src="https://img.shields.io/badge/Try_the_live_demo-ff2d78?style=for-the-badge"></a>
+  <img alt="Built on Nexconn Chat" src="https://img.shields.io/badge/Built_on-Nexconn_Chat-2f6fde?style=for-the-badge">
+  <img alt="Rust and Postgres" src="https://img.shields.io/badge/Rust-Postgres-b7410e?style=for-the-badge">
+  <img alt="React" src="https://img.shields.io/badge/React-TanStack-0ea5e9?style=for-the-badge">
+</p>
+
+<p align="center"><img src="docs/img/race.gif" width="880" alt="Rahul and Priya type mine; the seller's console shows them at places 1 and 2"></p>
 
 **Fair drops for India's live sellers and creators.** A seller pins one Pehle link during their
 YouTube or Instagram live. When 40 people want the same saree, Pehle decides who was first in
@@ -10,6 +20,14 @@ more chasing buyers who go silent.
 
 - Live: https://pehle.aryankumar.dev (judges start at https://pehle.aryankumar.dev/try, no sign-in)
 - Demo video: TODO link
+
+## What it looks like
+
+| | |
+|---|---|
+| <img src="docs/img/cohost.jpg" alt="AI co-host answers in Hinglish"><br>**AI co-host.** Priya asks "Delhi delivery kitne din?" and the co-host answers in Hinglish from the shop's shipping policy. | <img src="docs/img/claims.jpg" alt="Claim queue"><br>**The line.** Rahul typed "mine" first, Priya second. The seller's console shows the same order the room sees. |
+| <img src="docs/img/approval.jpg" alt="Discount request goes to the seller"><br>**Money stays with the seller.** "Thoda discount milega?" becomes a one-tap approval; the co-host promises nothing. | <img src="docs/img/moved.jpg" alt="Hold ran out, piece moved"><br>**The line moves itself.** Rahul didn't pay in 2 minutes, so the saree moved to Priya without the seller doing anything. |
+| <img src="docs/img/paid.jpg" alt="Payment confirmed"><br>**Paid to the seller.** Priya pays the shop directly, the seller taps Received, and her phone shows Paid. | <img src="docs/img/report.jpg" alt="Drop report"><br>**The report.** What sold, money collected, holds passed on and restock demand. |
 
 ## Judge path (about 3 minutes)
 
@@ -48,6 +66,27 @@ more chasing buyers who go silent.
    from real claims and payments. After every drop the seller gets a report: sell-through, money
    collected, non-payers replaced, and how many people are still waiting (restock demand).
 
+A claim, from the buyer's phone to the whole room:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant B as Buyer's phone
+    participant N as Nexconn open channel
+    participant P as Pehle API (Rust)
+    participant DB as Postgres
+    participant R as Everyone in the room
+    B->>N: types "mine"
+    N->>P: open_channel:pre_messaging webhook
+    P->>DB: claim() under a row lock
+    DB-->>P: Priya is #2, waiting
+    P-->>N: rewrite the message into a receipt
+    N->>R: "Priya #2 mine, waiting for P1"
+    Note over P,DB: Rahul's 2 minute hold runs out
+    P->>N: channel metadata and a private note
+    N->>B: "P1 moved to you. Pay to keep it."
+```
+
 The AI co-host answers price, size, delivery and returns questions in the buyer's language, from the
 shop's own policies and live stock, and never promises discounts or exceptions: those become one-tap
 approvals for the seller.
@@ -59,6 +98,17 @@ revert, priority senders and high-priority messages, group channels for buyer-sh
 shop clubs, a lobby open channel for the home page's live activity feed, `message:send` and
 connection webhooks for inbox ordering and traction, and server-issued tokens (the App Secret never
 reaches a browser). Details in [ARCHITECTURE.md](ARCHITECTURE.md).
+
+```mermaid
+flowchart LR
+    W["Web app (React)<br/>@nexconn/chat"] <-->|"rooms, checkout chats, clubs"| NX["Nexconn Chat"]
+    NX -->|"pre_messaging, message:send,<br/>metadata_update, connection_status"| API["Pehle API<br/>Rust, Axum"]
+    API -->|"open channels, metadata, groups,<br/>priority senders, mute"| NX
+    W -->|"REST"| API
+    API --> DB[("Postgres<br/>every write is a function")]
+    API --> AI["AI co-host<br/>DeepSeek v4.1 Flash"]
+    W -->|"UPI or Razorpay"| S["Seller's own account"]
+```
 
 | Nexconn feature | What Pehle uses it for | Code |
 |---|---|---|
