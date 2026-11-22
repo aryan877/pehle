@@ -139,6 +139,10 @@ flowchart LR
 - The race test sends claims through the Claim button path, which runs the same Postgres function as
   chat claims. Fairness log of that drop: https://pehle.aryankumar.dev/fair/09b03ee7
 
+## Traction
+
+126 people have connected to live chat on our App Key, counted from Nexconn's `user:connection_status` webhooks and shown at https://pehle.aryankumar.dev/stats (Nov 22 2026). This includes our own testing while building and recording the demo. No real shop has run a paid drop yet; practice shops and the race test are left out of `/stats`.
+
 ## Engineering
 
 - Rust (Axum, sqlx) and Postgres 17. **Every write is a Postgres function**; the API's connections run
