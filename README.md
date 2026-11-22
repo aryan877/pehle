@@ -3,6 +3,7 @@
 <p align="center"><b>Fair live drops for India's live sellers.</b><br>Buyers type "mine" in the live chat. Pehle decides who was first before anyone sees the message.</p>
 <p align="center">
   <a href="https://pehle.aryankumar.dev/try"><img alt="Try the live demo" src="https://img.shields.io/badge/Try_the_live_demo-ff2d78?style=for-the-badge"></a>
+  <a href="https://youtu.be/i4_FoM_UAE8"><img alt="Watch the demo" src="https://img.shields.io/badge/Watch_the_demo-cc0000?style=for-the-badge&logo=youtube&logoColor=white"></a>
   <img alt="Built on Nexconn Chat" src="https://img.shields.io/badge/Built_on-Nexconn_Chat-2f6fde?style=for-the-badge">
   <img alt="Rust and Postgres" src="https://img.shields.io/badge/Rust-Postgres-b7410e?style=for-the-badge">
   <img alt="React" src="https://img.shields.io/badge/React-TanStack-0ea5e9?style=for-the-badge">
@@ -19,7 +20,8 @@ more chasing buyers who go silent.
 *Pehle aao, pehle pao*: first come, first served.
 
 - Live: https://pehle.aryankumar.dev (judges start at https://pehle.aryankumar.dev/try, no sign-in)
-- Demo video: TODO link
+- Demo video: https://youtu.be/i4_FoM_UAE8
+- Nexconn App Key: `uwd1c0sxumo71`
 
 ## What it looks like
 
