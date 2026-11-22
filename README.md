@@ -74,12 +74,25 @@ reaches a browser). Details in [ARCHITECTURE.md](ARCHITECTURE.md).
 | Lobby open channel | The home page's live activity feed | [workers.rs](crates/pehle-api/src/workers.rs), [live-feed.tsx](apps/web/src/components/live-feed.tsx) |
 | Server API tokens and user profiles | Tokens issued by our server, so the App Secret never reaches a browser; buyer names synced to Nexconn | [state.rs](crates/pehle-api/src/state.rs), [session.rs](crates/pehle-api/src/routes/session.rs) |
 
+## Proof
+
+- Chat claims, ranked before delivery: in https://pehle.aryankumar.dev/fair/32b59aba two buyers typed
+  "mine" in the room chat. Both claims show source "chat". The server decided Rahul's claim 272 ms
+  after Nexconn received his message and Priya's 35 ms after, before either message reached the room.
+  Rahul didn't pay, his 2 minute hold ran out, the saree moved to Priya, and she paid.
+- Race test on the live site, Nov 22 2026: 200 buyers claimed one 10-piece item at the same moment.
+  Exactly 10 holds, at places 1 to 10; places 1 to 200 unique with no gaps; 0 failed claims; all 200
+  claims in 4.8 s from one laptop. Details in [docs/RACE-TEST.md](docs/RACE-TEST.md); rerun with
+  `bun scripts/race-test.ts 200 10`.
+- The race test sends claims through the Claim button path, which runs the same Postgres function as
+  chat claims. Fairness log of that drop: https://pehle.aryankumar.dev/fair/09b03ee7
+
 ## Engineering
 
 - Rust (Axum, sqlx) and Postgres 17. **Every write is a Postgres function**; the API's connections run
   as a role that cannot write tables directly. SQL lives in three files: schema, functions, access.
 - Types flow from SQL to Rust (compile-time checked) to OpenAPI to a generated TypeScript client.
-- 52 Rust tests, including a 60-buyer race, webhook retries, hold expiry and promotion, late and
+- 59 Rust tests, including a 60-buyer race, webhook retries, hold expiry and promotion, late and
   short payments, YouTube identity merging, demo isolation, and the role's write restrictions. The
   database tests run as the restricted API role.
 - `bun scripts/load-test.ts 2000 10` (local, debug build): 2,000 buyers claiming 10 units at the same
@@ -106,8 +119,3 @@ the API. [docs/KEYS.md](docs/KEYS.md) lists every key and console setting for pr
 
 One server: `docker compose -f infra/compose.yml --env-file infra/.env.production up -d --build`
 runs Postgres, the API and Caddy (TLS, web app, media, link previews).
-
-## Notes for judges
-
-Sign-in is optional: `/try` runs without an account. Phone sign-in uses the test number listed in
-[docs/KEYS.md](docs/KEYS.md).
